@@ -1,5 +1,5 @@
 {
-  "name": "node server",
+  "name": "node_server",
   "version": "1.0.0",
   "description": "Starter node server",
   "main": "server.js",
@@ -12,7 +12,7 @@
   },
   "repository": {
     "type": "git",
-    "url": ""
+    "url": "https://github.com/Alontal/Node-MySQL-kit"
   },
   "author": "Alon Tal",
   "license": "MIT",

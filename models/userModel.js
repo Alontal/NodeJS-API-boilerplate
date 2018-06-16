@@ -1,5 +1,4 @@
-var express = require('express'),
-  db = require('../db/mysql'),
+var db = require('../db/mysql'),
   encrypt = require('../util/encryption'),
   logger = require('../util/logger'),
   _e = require('../util/errorHandle');
@@ -65,14 +64,23 @@ E.login = (email, password) => {
     return Promise.reject('You must send the username and the password');
   }
   return E.getUserByEmail(email).then((rows) => {
-    if (rows.length == 0) return Promise.reject(`no such user...`);
-    var user = rows[0]
-    if (!encrypt.validPassword(password, user.password)) {
-      return Promise.reject(`The username or password don't match..`);
+    if (rows.length == 0) {
+      logger.debug('authentication failed login no such user')
+      return Promise.reject({ authentication: 'failed' });
     }
-    return ({ message: 'token created', token: encrypt.createToken(user) })
+    if (!encrypt.validPassword(password, rows[0].password)) {
+      logger.debug('authentication failed login pass dont match username ')
+      return Promise.reject({ authentication: 'failed' });
+    }
+    return ({ message: 'token created', token: encrypt.createToken(rows[0]) })
   })
-    .catch(error => _e.HandleError('E.login() ', error))
+    .catch(error => {
+      if (error.authentication) {
+        logger.data(`failed login detected by ${email}`);
+        return
+      }
+      _e.HandleError('E.login() ', error)
+    }
+    )
 
 }
-

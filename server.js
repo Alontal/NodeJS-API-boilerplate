@@ -1,7 +1,6 @@
 const express = require('express'),
   logger = require('./util/logger'),
   app = express(),
-  path = require('path'),
   bodyParser = require('body-parser'),
   cookieParser = require('cookie-parser'),
   env = require('./util/env'); //manage environment for app  
