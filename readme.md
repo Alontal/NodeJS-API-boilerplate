@@ -1,12 +1,14 @@
 # Starter Nodejs with Mysql & Winston & JWT.
 
 ## ready to use backend server with tools needed to:
-1. use production settings.
-2. logging logs with winston logger.
-3. integration to MySQL 
-4. JWT api ready to use
-5. sql script to create users table 
-6. debug setting with nodemon in launch.json 
+### whats included? 
+1. logs with winston logger.
+2. integration to MySQL (with pool for many db connections);
+3. integration to Mongo db (using baseClass for utility functions)
+4. JWT for security
+5. notification module to send sms / email 
+6. sql script to create notifications table (cron sends them)
+7. debug setting with nodemon in launch.json 
 
 ## install:
 

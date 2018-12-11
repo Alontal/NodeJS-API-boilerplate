@@ -1,6 +1,7 @@
 const E = module.exports,
     Job = require('../../cron/cron_jobs/job'),
     // taskController = require('./taskController'),
+    notificationController = require('./notificationController'),
     logger = require('../util/logger'),
     _ = require('lodash');
 
@@ -24,9 +25,14 @@ E.createJobForTask = (task) => {
 
 // every 1 min go get notification from db
 E.sendNotificationsEvery_X_Time = (cron_expr = '0 * * * * *') => {
-    new Job('so something every x time', new Date(), null, cron_expr).do(async function () {
-        logger.info('doing......');
-        // do something
+    new Job('sendNotificationsEvery_X_Time', new Date(), null, cron_expr).do(async function () {
+        logger.info('starting to check for notifications');
+        notificationController.getAndSend().then(results => {
+            if (results.error) return logger.warning('notifications not sent :', results.error);
+            logger.info('notifications sent :', results);
+        }).catch(error => {
+            logger.error('sendNotifications()', error);
+        });
     });
 };
 

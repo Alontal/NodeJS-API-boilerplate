@@ -61,7 +61,7 @@ class Notification {
         return db.executeSql.insertIntoTable('notifications', this)
     }
 
-    getByStatus(status = 0) {
+    static getByStatus(status = 0) {
         return db.executeSql.query('SELECT * FROM notifications WHERE sent = ?', [status]);
     }
 
