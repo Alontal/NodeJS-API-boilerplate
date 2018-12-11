@@ -30,6 +30,22 @@
             },
             "console": "integratedTerminal",
             "internalConsoleOptions": "neverOpen"
-        }
+        },
+        /*
+        * e.g to debug other files without all project
+        */
+        // {
+        //     "type": "node",
+        //     "request": "launch",
+        //     "name": "controller",
+        //     "runtimeExecutable": "nodemon",
+        //     "program": "${workspaceFolder}/app/controllers/baseController.js",
+        //     // "program": "${workspaceFolder}/server.js",
+        //     "restart": true,
+        //     "env": {
+        //     },
+        //     "console": "integratedTerminal",
+        //     "internalConsoleOptions": "neverOpen"
+        // }
     ]
 }

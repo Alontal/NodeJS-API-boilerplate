@@ -33,4 +33,9 @@ in prod mode: ``` $ npm start:prod ```
    - promise-mysql : handle mysql connections https://www.npmjs.com/package/promise-mysql
    - uuid : to create user with new uuid https://www.npmjs.com/package/uuid
    - winston : manage logging our app  https://github.com/winstonjs/winston
-   - nodemon: see launch.json settings https://www.npmjs.com/package/nodemon
+   - nodemon: see  settings https://www.npmjs.com/package/nodemon
+   - node-schedule: see  settings https://github.com/node-schedule/node-schedule#readme
+   - nodemailer: see  settings https://nodemailer.com/
+   - mongoose: see http://mongoosejs.com  
+   - request-promise-native see https://github.com/request/request-promise-native#readme
+   - moment see: http://momentjs.com

@@ -1,9 +1,10 @@
+console.clear();
 const express = require('express'),
-  logger = require('./util/logger'),
+  logger = require('./app/util/logger'),
   app = express(),
   bodyParser = require('body-parser'),
   cookieParser = require('cookie-parser'),
-  env = require('./util/env'); //manage environment for app  
+  env = require('./app/util/env'); //manage environment for app  
 
 const port = process.env.PORT;
 // Parse req made to app
@@ -22,22 +23,14 @@ app.use((req, res, next) => {
 // routes ==================================================
 require('./app/routes')(app); // pass our application into our routes
 
+// catch uncaught process errors;
+require('./app/util/errorHandle');
 
-//catch ERRORS
-process.on('uncaughtException', function (err) {
-  var logger = require('./util/logger');
-  logger.error('uncaughtException', err);
-  setTimeout(function () {
-    logger.error('Closing Process');
-    process.exit(1);
-  }, 2000);
-});
-process.on('unhandledRejection', (reason, p) => {
-  logger.info('unhandledRejection' + reason + 'p: ' + p);
-});
-process.on('warning', (warning) => {
-  logger.error('warning :', warning.name + ' : ' + warning.message);
-});
+// bootstrap the app
+require('./config/bootstrap');
+
+
+
 
 //start our server on port set in .env file
 app.listen(port, () => {

@@ -8,7 +8,7 @@ if (process.env.NODE_ENV !== "production") {
     logger.info('loading settings for Test ');
     dotenv.config(); //load local settings
 } else {
-    logger.warn('loading settings for production ');
+    logger.warning('loading settings for production ');
     var env_dir = path.resolve('/var/env/.env.production');
     if (!fs.existsSync(env_dir)) {
         logger.error('no env file found on server.. aborting process..', env_dir, );

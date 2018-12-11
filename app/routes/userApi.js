@@ -2,8 +2,8 @@ const express = require('express'),
     router = express.Router(),
     user = require('../../models/userModel'),
     decodeToken = require('../middleware/decodeToken'),
-    _e = require('../../util/errorHandle');
-var logger = require('../../util/logger')
+    _e = require('../../app/util/errorHandle'),
+    logger = require('../../app/util/logger');
 
 const api_name = 'userApi.js';
 
@@ -74,7 +74,7 @@ router.post('/login', (req, res) => {
     if(!email && !pass) return res.status(500).send('failed username or password')
     user.login(email, pass).then((response) => {
         if (!response) response = {authentication:'failed'}
-        logger.silly('response :', { response });
+        logger.debug('response :', { response });
         res.status(200).send(response);
     }).catch(err => {
         _e.HandleError(err , api_name + '/login')

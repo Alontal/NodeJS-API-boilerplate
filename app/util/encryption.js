@@ -1,4 +1,4 @@
-var uuidV4 = require('uuid/v4'),
+const uuidV4 = require('uuid/v4'),
     _ = require('lodash'),
     jwt = require('jsonwebtoken'),
     bcrypt = require('bcrypt-nodejs'),

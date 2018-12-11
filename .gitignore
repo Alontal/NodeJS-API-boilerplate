@@ -44,5 +44,5 @@ testem.log
 Thumbs.db
 
 # env files
-# .env
-# .env.production
+.env
+.env.production
