@@ -26,18 +26,15 @@ E.getAndSend = async () => {
     let n = [];
     for (const key in notifications) {
         let _n = notifications[key]
-        if(_n.type !=='sms') {
             let res =  await E.send(_n.type,_n.title,_n.from,_n.to_phone,_n.to_email,_n.msg,_n.severity) 
             if( isSuccess(res) ) {
                 // after msg was sent mark in db that it was sent
                 notification.updateNotificationSent(true,_n.id )
             }
             n.push({type: _n.type, results: res.length === 0 ? null:  res});
-        }
     }
     return Promise.all(n)
 }
-
 
 function isSuccess(res){
     let r = false

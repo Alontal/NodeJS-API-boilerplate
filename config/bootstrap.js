@@ -7,4 +7,4 @@ new mongo().connectToDB();
 // start task job
 // job.init();
 // job.startTestsEveryXTime();
-job.sendNotificationsEvery_X_Time();
+job.send_notifications();

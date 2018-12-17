@@ -24,8 +24,8 @@ E.createJobForTask = (task) => {
 }
 
 // every 1 min go get notification from db
-E.sendNotificationsEvery_X_Time = (cron_expr = '0 * * * * *') => {
-    new Job('sendNotificationsEvery_X_Time', new Date(), null, cron_expr).do(async function () {
+E.send_notifications  = (cron_expr = '0 * * * * *') => {
+    new Job('send_notifications', new Date(), null, cron_expr).do(async function () {
         logger.info('starting to check for notifications');
         notificationController.getAndSend().then(results => {
             if (results.error) return logger.warning('notifications not sent :', results.error);
