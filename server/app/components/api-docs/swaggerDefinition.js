@@ -20,7 +20,7 @@ module.exports = {
   },
   externalDocs: {
     description: "Git Readme.md",
-    url: "https://github.com/alontalNode-MySQL-kit/blob/master/readme.md"
+    url: "https://github.com/Alontal/NodeJS-api"
   },
   host:
     process.env.NODE_ENV === "production"
