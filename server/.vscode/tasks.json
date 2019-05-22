@@ -1,0 +1,19 @@
+{
+    "version": "0.1.0",
+    "command": "myCommand",
+    "isShellCommand": false,
+    "args": [],
+    "showOutput": "always",
+    "tasks": [
+        {
+            "taskName": "start_node_compose",
+            "showOutput": "always",
+            "isBuildCommand": true,
+            "command": "/bin/bash",
+            "args": [
+                "-c",
+                "docker-compose -f docker-compose.debug.yml up --build "
+            ]
+        }
+    ]
+}

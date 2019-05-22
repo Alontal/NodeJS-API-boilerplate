@@ -1,0 +1,45 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+
+        // {
+        //     "name": "Docker: Attach to Node",
+        //     "type": "node",
+        //     "request": "attach",
+        //     "address": "127.0.0.1",
+        //     "port": 9229,
+        //     "localRoot": "${workspaceFolder}",
+        //     "remoteRoot": "/",
+        //     // "remoteRoot": "/server",
+        //     "preLaunchTask": "start_node_compose",
+        //     "protocol": "inspector",
+        // },
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "nodemon",
+            "runtimeExecutable": "nodemon",
+            "program": "${workspaceFolder}/server/server.js",
+            "restart": true,
+            "env": {
+                    "NODE_ENV": "debug"
+            },
+            "console": "integratedTerminal",
+            "internalConsoleOptions": "neverOpen"
+        },
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "node",
+            "program": "${workspaceFolder}/server.js",
+            "env": {
+                "NODE_ENV": "debug"
+            },
+            "console": "integratedTerminal"
+        },
+    ],
+    
+}
