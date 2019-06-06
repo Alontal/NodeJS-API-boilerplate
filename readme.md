@@ -1,6 +1,6 @@
 # Node API boilerplate
 
-This is our boilerplate project for an awaosme nodejs api.
+This is our boilerplate project for an awesome nodejs api.
 
 ## Getting Started
 
