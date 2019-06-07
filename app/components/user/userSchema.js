@@ -23,10 +23,10 @@ const userSchema = new mongoose.Schema(
 		},
 		type: {
 			type: String,
-			enum: ['owner', 'admin', 'customer', 'limited'],
-			// default: 'shopper',
-			required: true
-			// lowercase: true
+			enum: ['user', 'admin'],
+			default: 'user',
+			required: true,
+			lowercase: true
 		},
 		contactInfo: {
 			tel: [Number],
