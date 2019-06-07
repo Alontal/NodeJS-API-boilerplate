@@ -48,5 +48,3 @@ require('./app/bootstrap');
 app.listen(port, () =>
 	logger.info(`Server started running... on port: ${process.env.PORT}`)
 );
-
-// TODO add Joi
