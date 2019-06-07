@@ -1,50 +1,76 @@
-const {logger} = require('../util');
+const logger = require('../util/logger');
+const { isEqual } = require('lodash');
 
 class BaseController {
-
 	constructor(model) {
 		this.model = model;
 	}
 
-	async create(data, options) {
-		logger.debug('BaseController create');
-		let res =  await this.model.create(data, options);
-		if(res.errors) logger.error('BaseController create', res.errors);
-		else logger.info(`doc ${res.id} inserted `);       
-		return res;
+	async insert(data) {
+		try {
+			const newModel = new this.model(data);
+			let created = await newModel.save();
+			if (created.err) throw created.err;
+			return created;
+		} catch (error) {
+			logger.error('base class', error, 'function name: create');
+			return error;
+		}
 	}
 
-	async getAll( select = '-__v', populate = '') {
-		return this.model.find({}).select(select).populate(populate);
-	}
-	async selectOne( select = '-__v', populate = '') {
-		return this.model.find({}).select(select).populate(populate);
-	}
-
-	async selectSingle(id, select = '-__v', populate = '') {
-		return this.model.findById(id).select(select).populate(populate);
-	}
-
-	async find(query, options){
-		return this.model.find(query, options);
-	}
-	
-	async findOne(query, options){
-		return this.model.findOne(query, options);
-	}
-	
-	async findOneAndUpdate(query, data, options){
-		return this.model.findOneAndUpdate(query, data, options);
+	async getOne(query, options = {}) {
+		try {
+			let doc = await this.model.findOne(query, options);
+			return doc;
+		} catch (error) {
+			logger.info('base class', error, 'function name: getOne');
+			return error;
+		}
 	}
 
-	// async findOneByIdAndUpdate(id, data) {
-	// 	return await this.model.findByIdAndUpdate(id, data);
-	// }
-	
-	async removeOne(id) {
-		return this.model.findByIdAndRemove(id);
+	async getMany(query = {}, options = {}) {
+		try {
+			let docs = await this.model.find(query, options);
+			return docs;
+		} catch (error) {
+			logger.info('base class', error, 'function name: getMany');
+			return error;
+		}
 	}
 
+	async update(query, newData, options = { new: true }) {
+		try {
+			const oldDoc = await this.getOne(query);
+			const updated = await this.model.findOneAndUpdate(
+				query,
+				{ $set: newData },
+				options
+			);
+			if (isEqual(oldDoc, updated)) {
+				logger.debug('Failed to update document on database');
+				throw updated.err;
+			}
+			return true;
+		} catch (error) {
+			logger.info('base class', error, 'function name: update');
+			return false;
+		}
+	}
 
+	async delete(query, options = { rawResult: true }) {
+		try {
+			const deleted = await this.model.findOneAndDelete(query, options);
+			const verifyDelete = await this.model.findOne(query);
+			if (!deleted && !verifyDelete) {
+				logger.debug('Failed to delete document from database');
+				throw deleted.err;
+			}
+			return true;
+		} catch (error) {
+			logger.info('base class', error, 'function name: delete');
+			return false;
+		}
+	}
 }
+
 module.exports = BaseController;
