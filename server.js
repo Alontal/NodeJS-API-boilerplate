@@ -4,6 +4,9 @@ const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
+// show nice console text
+const text = require('./loadingCliText');
+console.log(text);
 // eslint-disable-next-line no-unused-vars
 const { logger, env } = require('./app/util');
 
