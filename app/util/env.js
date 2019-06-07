@@ -6,7 +6,8 @@ const path = require('path'),
 	fs = require('fs');
 
 // check what env needed to start app.
-logger.warning(yellowBgRed('loading settings for ' + process.env.NODE_ENV));
+logger.warning(yellowBgRed(`loading settings for ${process.env.NODE_ENV 
+	|| 'demo - (NO ENV FILE FOUND!, please create .env.debug && .env.production. (see .env.demo for example)'} `));
 if (!process.env.NODE_ENV || process.env.NODE_ENV === 'debug') {
 	// check if there is no '.debug.env' file then use demo one
 	// demo file DO NOT includes in .gitignore therefore it must be replaced !
