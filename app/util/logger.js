@@ -6,7 +6,7 @@ const winston = require('winston'),
 	moment = require('moment');
 
 const logs_config = {
-	log_file_name: process.env.APP_DOMAIN,
+	log_file_name: process.env.APP_DOMAIN || 'APP_DOMAIN',
 	log_file_name_Exceptions: '/uncaughtExceptions',
 	logging_dir: 'node',
 	//set the levels that will be printed in matching file
@@ -17,13 +17,21 @@ const logs_config = {
 };
 
 const LOG_DIR = path.resolve(__dirname, '..', '..', 'LOG/');
+if (!fs.existsSync(LOG_DIR)) {
+	mkdirp(LOG_DIR, (err) => {
+		if (err) console.error(err);
+		else console.log('log directory created!');
+	});
+}
 
+console.info('Logs will write to Directory >> ', LOG_DIR);
+	
 const timeStampFormat = () => moment().format(moment.HTML5_FMT.DATETIME_LOCAL_SECONDS);
 
 //daily rotate log files
 require('winston-daily-rotate-file');
 const daily_rotate_transport = new(winston.transports.DailyRotateFile)({
-	filename: LOG_DIR + logs_config.log_file_name + '.log',
+	filename: `${LOG_DIR}/ ${logs_config.log_file_name}.log`,
 	prepend: true,
 	// level: process.env.ENV === 'development' ? 'debug' : 'info'
 	level: logs_config.level_rotate,
