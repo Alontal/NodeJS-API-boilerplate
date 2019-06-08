@@ -20,7 +20,7 @@ const MESSAGES = {
 	FAILED_TO: to => 'failed to... ' + to
 };
 
-async function insert(user) {
+const insert = async user => {
 	try {
 		if (!user.username || !user.password) {
 			return MESSAGES.PASS_NOT_PROVIDED;
@@ -36,9 +36,9 @@ async function insert(user) {
 		logger.error(MESSAGES.FAILED_TO('insert user'), error);
 		return MESSAGES.FAILED_TO(error.name);
 	}
-}
+};
 
-async function login(username, password) {
+const login = async (username, password) => {
 	try {
 		const userDB = await userModel.getOne({ username });
 		const user = userDB.toObject();
@@ -57,10 +57,11 @@ async function login(username, password) {
 		logger.error(MESSAGES.FAILED, error);
 		return MESSAGES.FAILED;
 	}
-}
-async function getByEmail(username, options) {
+};
+
+const getByUserName = async (username, options) => {
 	try {
-		let user = await userModel.getOne(username, options);
+		let user = await userModel.getOne({ username }, options);
 		logger.debug(
 			user
 				? `get user for ${username}: ${user}`
@@ -71,9 +72,9 @@ async function getByEmail(username, options) {
 		logger.error(MESSAGES.FAILED_TO(`get user for ${email}`), error);
 		return MESSAGES.FAILED_TO(`get user for ${email}`);
 	}
-}
+};
 
-async function getById(id) {
+const getById = async id => {
 	try {
 		let user = await userModel.model.findById(id);
 		logger.debug(`found user for ${id}:`, user._doc || null);
@@ -82,9 +83,9 @@ async function getById(id) {
 		logger.error(MESSAGES.FAILED_TO(`get user for ${id}`), error);
 		return;
 	}
-}
+};
 
-async function getAll() {
+const getAll = async () => {
 	try {
 		let allUsers = await userModel.getMany();
 		return allUsers;
@@ -92,9 +93,9 @@ async function getAll() {
 		logger.error(MESSAGES.FAILED_TO('get all users:'), error);
 		return MESSAGES.FAILED_TO('get all users:');
 	}
-}
+};
 
-async function generateResetPasswordLink(email) {
+const generateResetPasswordLink = async email => {
 	try {
 		let user = await getByEmail(email);
 		if (user && user.active) {
@@ -133,9 +134,9 @@ async function generateResetPasswordLink(email) {
 			message: MESSAGES.PASSWORD_RESET
 		};
 	}
-}
+};
 
-async function resetPassword(email, newPassword, oldPassword) {
+const resetPassword = async (email, newPassword, oldPassword) => {
 	try {
 		const hash = encryption.hashPassword(newPassword);
 		const sameAsOldPassword = encryption.validPassword(
@@ -167,12 +168,12 @@ async function resetPassword(email, newPassword, oldPassword) {
 			message: MESSAGES.PASSWORD_RESET_FAILED
 		};
 	}
-}
+};
 
 module.exports = {
 	MESSAGES,
 	insert,
-	getByEmail,
+	getByUserName,
 	getById,
 	getAll,
 	login,
