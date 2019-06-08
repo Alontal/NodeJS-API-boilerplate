@@ -1,6 +1,5 @@
 const express = require('express');
 const router = express.Router();
-const logger = require('../../util/logger');
 const { userController, userValidator } = require('.');
 const { auth, asyncMiddleware } = require('../../middleware');
 const { encryption, responseHandler } = require('../../util');
