@@ -68,8 +68,8 @@ router.get(
 router.post(
 	'/reset-password',
 	asyncMiddleware(async (req, res) => {
-		const email = req.body.email;
-		const response = await userController.generateResetPasswordLink(email);
+		const username = req.body.username;
+		const response = await userController.generateResetPasswordLink(username);
 		res.status(200).send(responseHandler.send(response));
 	})
 );
