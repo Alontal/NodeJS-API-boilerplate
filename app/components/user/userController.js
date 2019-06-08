@@ -85,13 +85,13 @@ const getById = async id => {
 	}
 };
 
-const getAll = async () => {
+const getAll = async query => {
 	try {
-		let allUsers = await userModel.getMany();
+		let allUsers = await userModel.getMany(query);
 		return allUsers;
 	} catch (error) {
 		logger.error(MESSAGES.FAILED_TO('get all users:'), error);
-		return MESSAGES.FAILED_TO('get all users:');
+		return null;
 	}
 };
 
