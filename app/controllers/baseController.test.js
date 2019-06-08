@@ -16,8 +16,6 @@ afterAll(async () => {
 	// await mongoServer.stop();
 });
 
-//im using user schema for testing but its applied for every schema
-
 const user = {
 	username: 'bob@gmail.com',
 	password: 'OBHG123!',
