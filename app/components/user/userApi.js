@@ -8,9 +8,9 @@ const { encryption, responseHandler } = require('../../util');
 // insert users with full details
 router.post(
 	'/insert',
-	// auth.decodeToken, // decode the token to data
-	// auth.loadUserFromToken, // fetch user from db by token data
-	// auth.andRestrictTo(['owner', 'admin']), //check user type meet given value;
+	auth.decodeToken, // decode the token to data
+	auth.loadUserFromToken, // fetch user from db by token data
+	auth.andRestrictTo(['admin']), //check user type meet given value;
 	asyncMiddleware(async (req, res) => {
 		const user = req.body;
 		const validation = userValidator.validateUserInsert(user);
@@ -45,21 +45,29 @@ router.get(
 router.post(
 	'/get',
 	auth.decodeToken,
+	auth.loadUserFromToken,
+	auth.andRestrictTo(['admin']),
 	asyncMiddleware(async (req, res) => {
 		// let u = res.req.authenticatedUser; // need to check
-		let user = req.body;
-		let response = await userController.getUser({ username: user.username });
+		let filters = req.body.filters;
+		if (Object.keys(filters).length === 0) {
+			//user have to provide filter, because its return just one user
+			return res
+				.status(200)
+				.send(responseHandler.send('please provide at least one filter'));
+		}
+		let response = await userController.getUser(filters, { password: 0 }); // wont be able to get the password hash
 		res.status(200).send(responseHandler.send(response));
 	})
 );
 
-router.get(
+router.post(
 	'/get-all',
-	// auth.decodeToken,
-	// auth.loadUserFromToken,
-	// auth.andRestrictTo(['admin']),
+	auth.decodeToken,
+	auth.loadUserFromToken,
+	auth.andRestrictTo(['admin']),
 	asyncMiddleware(async (req, res) => {
-		let filters = req.body ? {} : req.body;
+		let filters = req.body;
 		let response = await userController.getAll(filters);
 		res.status(200).send(responseHandler.send(response));
 	})
