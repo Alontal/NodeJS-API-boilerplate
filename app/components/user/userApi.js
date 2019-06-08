@@ -86,7 +86,7 @@ router.post(
 	asyncMiddleware(async (req, res) => {
 		try {
 			const token = encryption.verifyToken(req.headers['x-access-token']);
-			let user = await userController.getByEmail(token.email);
+			let user = await userController.getUser({ username: token.username });
 			const newPassword = req.body.newPassword;
 			const newPasswordConf = req.body.newPasswordConf;
 			const passwordValidation = await userValidator.validatePasswordReset(
@@ -97,7 +97,7 @@ router.post(
 				return res.status(200).send(passwordValidation);
 			}
 			const response = await userController.resetPassword(
-				token.email,
+				token.username,
 				newPassword,
 				user.password
 			);
