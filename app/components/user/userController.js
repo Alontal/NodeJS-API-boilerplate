@@ -76,12 +76,12 @@ const getByUserName = async (username, options) => {
 
 const getById = async id => {
 	try {
-		let user = await userModel.model.findById(id);
+		let user = await userModel.getOne({ _id: id });
 		logger.debug(`found user for ${id}:`, user._doc || null);
 		return user;
 	} catch (error) {
 		logger.error(MESSAGES.FAILED_TO(`get user for ${id}`), error);
-		return;
+		return null;
 	}
 };
 
@@ -92,6 +92,21 @@ const getAll = async () => {
 	} catch (error) {
 		logger.error(MESSAGES.FAILED_TO('get all users:'), error);
 		return MESSAGES.FAILED_TO('get all users:');
+	}
+};
+
+const getUser = async (query, options) => {
+	try {
+		let user = await userModel.getOne(query, options);
+		logger.debug(
+			user
+				? `get user for ${query}: ${user}`
+				: `did not found user for ${query}`
+		);
+		return user;
+	} catch (error) {
+		logger.error(MESSAGES.FAILED_TO(`get user for ${query}`), error);
+		return null;
 	}
 };
 
@@ -178,5 +193,6 @@ module.exports = {
 	getAll,
 	login,
 	generateResetPasswordLink,
-	resetPassword
+	resetPassword,
+	getUser
 };
