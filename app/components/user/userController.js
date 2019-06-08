@@ -125,7 +125,7 @@ const generateResetPasswordLink = async username => {
 	}
 };
 
-const resetPassword = async (email, newPassword, oldPassword) => {
+const resetPassword = async (username, newPassword, oldPassword) => {
 	try {
 		const hash = encryption.hashPassword(newPassword);
 		const sameAsOldPassword = encryption.validPassword(
@@ -138,8 +138,8 @@ const resetPassword = async (email, newPassword, oldPassword) => {
 				message: MESSAGES.PASSWORD_RESET_SAME_PASSWORD
 			};
 		}
-		const passwordUpdated = await userModel.updateBy(
-			{ email: email },
+		const passwordUpdated = await userModel.update(
+			{ username },
 			{ password: hash },
 			{ new: true }
 		);
@@ -162,11 +162,9 @@ const resetPassword = async (email, newPassword, oldPassword) => {
 module.exports = {
 	MESSAGES,
 	insert,
-	getByUserName,
-	getById,
 	getAll,
+	getUser,
 	login,
 	generateResetPasswordLink,
-	resetPassword,
-	getUser
+	resetPassword
 };
