@@ -59,32 +59,6 @@ const login = async (username, password) => {
 	}
 };
 
-const getByUserName = async (username, options) => {
-	try {
-		let user = await userModel.getOne({ username }, options);
-		logger.debug(
-			user
-				? `get user for ${username}: ${user}`
-				: `did not found user for ${username}`
-		);
-		return user;
-	} catch (error) {
-		logger.error(MESSAGES.FAILED_TO(`get user for ${email}`), error);
-		return MESSAGES.FAILED_TO(`get user for ${email}`);
-	}
-};
-
-const getById = async id => {
-	try {
-		let user = await userModel.getOne({ _id: id });
-		logger.debug(`found user for ${id}:`, user._doc || null);
-		return user;
-	} catch (error) {
-		logger.error(MESSAGES.FAILED_TO(`get user for ${id}`), error);
-		return null;
-	}
-};
-
 const getAll = async query => {
 	try {
 		let allUsers = await userModel.getMany(query);
