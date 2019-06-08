@@ -84,12 +84,12 @@ const getUser = async (query, options) => {
 	}
 };
 
-const generateResetPasswordLink = async email => {
+const generateResetPasswordLink = async username => {
 	try {
-		let user = await getByEmail(email);
+		let user = await getUser({ username });
 		if (user && user.active) {
 			let refreshToken = encryption.createToken(
-				{ id: user._id, email: user.email },
+				{ id: user._id, username: user.username },
 				'1h'
 			);
 			const resetLink =
@@ -98,7 +98,7 @@ const generateResetPasswordLink = async email => {
 					: `localhost/api/user/password-reset/${refreshToken}`;
 			const message = {
 				from: process.env.APP_DOMAIN,
-				to: user.email,
+				to: user.username,
 				subject: 'Password reset'
 			};
 			const locals = {
