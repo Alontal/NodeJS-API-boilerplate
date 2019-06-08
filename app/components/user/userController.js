@@ -1,17 +1,18 @@
 const { userModel } = require('.');
 const { encryption, logger } = require('../../util');
 const { emailController } = require('../email/index');
-const _ = require('lodash');
 
 const MESSAGES = {
 	FAILED: 'Error accord !',
 	USER_EXIST: 'User exist',
 	USER_NOT_FOUND: 'User not found',
 	PASS_DONT_MATCH: 'Password dont match..',
-	PASSWORD_RESET:'If this email linked to an account, instructions for reseting your password were sent',
-	PASSWORD_RESET_FAILED:'Failed to update password, please try again or contact support',
-	PASSWORD_RESET_SUCCESS:'Password was updated!',
-	PASSWORD_RESET_SAME_PASSWORD:'You cant choose your current password',
+	PASSWORD_RESET:
+		'If this email linked to an account, instructions for reseting your password were sent',
+	PASSWORD_RESET_FAILED:
+		'Failed to update password, please try again or contact support',
+	PASSWORD_RESET_SUCCESS: 'Password was updated!',
+	PASSWORD_RESET_SAME_PASSWORD: 'You cant choose your current password',
 	PASS_NOT_PROVIDED: 'Missing username or password',
 	SUCCESS: 'Process end Successfully',
 	USER_LOG_IN_SUCCESS: email =>
@@ -19,88 +20,86 @@ const MESSAGES = {
 	FAILED_TO: to => 'failed to... ' + to
 };
 
-async function insert(user) {
+const insert = async user => {
 	try {
-		let userOldPass = user.password;
-		if (!user.email || !user.password) {
+		if (!user.username || !user.password) {
 			return MESSAGES.PASS_NOT_PROVIDED;
 		}
-		const existingUser = await getByEmail(user.email);
+		const existingUser = await userModel.getOne({ username: user.username });
 		if (existingUser) return { message: MESSAGES.USER_EXIST };
 		user.password = encryption.hashPassword(user.password);
 		const inserted = await userModel.insert(user);
 		if (!inserted) throw Error(MESSAGES.FAILED_TO('insert user'));
 		logger.info('user inserted  :', inserted);
-		const loggedUser = await login(user.email, userOldPass);
-		return loggedUser || inserted;
+		return { message: 'user created' };
 	} catch (error) {
 		logger.error(MESSAGES.FAILED_TO('insert user'), error);
 		return MESSAGES.FAILED_TO(error.name);
 	}
-	
-}
+};
 
-async function login(email, password) {
+const login = async (username, password) => {
 	try {
-		const user = await getByEmail(email);
-		if (!user) return null; //nu such user;
+		const userDB = await userModel.getOne({ username });
+		const user = userDB.toObject();
+		if (!user) return null; //no such user;
 		if (!encryption.validPassword(password, user.password)) {
 			logger.debug(MESSAGES.PASS_DONT_MATCH);
 			return null; //password dont match;
 		}
-		logger.debug(MESSAGES.USER_LOG_IN_SUCCESS(email), user.toObject());
-		const dataToDecode = _.omit(user.toObject(), ['password']); // dont include pass in user object
+		logger.debug(MESSAGES.USER_LOG_IN_SUCCESS(username));
+		delete user.password; //dont include password on the data to encode
 		return {
 			message: MESSAGES.SUCCESS,
-			token: encryption.createToken(dataToDecode)
+			token: encryption.createToken(user)
 		};
 	} catch (error) {
 		logger.error(MESSAGES.FAILED, error);
 		return MESSAGES.FAILED;
 	}
-}
-async function getByEmail(email, options) {
-	try {
-		let user = await userModel.getUserByEmail(email, options);
-		logger.debug(user ? `get user for ${email}: ${user}`: `did not found user for ${email}`);
-		return user;
-	} catch (error) {
-		logger.error(MESSAGES.FAILED_TO(`get user for ${email}`), error);
-		return MESSAGES.FAILED_TO(`get user for ${email}`);
-	}
-}
+};
 
-async function getById(id) {
+const getAll = async query => {
 	try {
-		let user = await userModel.model.findById(id);
-		logger.debug(`found user for ${id}:`, user._doc || null);
-		return user;
-	} catch (error) {
-		logger.error(MESSAGES.FAILED_TO(`get user for ${id}`), error);
-		return;
-	}
-}
-
-async function getAll() {
-	try {
-		let allUsers = await userModel.getAllUsers();
-		return await allUsers;
+		let allUsers = await userModel.getMany(query);
+		return allUsers;
 	} catch (error) {
 		logger.error(MESSAGES.FAILED_TO('get all users:'), error);
-		return MESSAGES.FAILED_TO('get all users:');
+		return null;
 	}
-}
+};
 
-async function generateResetPasswordLink(email) {
+const getUser = async (query, options) => {
 	try {
-		let user = await getByEmail(email);
-		if(user && user.active){
-			let refreshToken = encryption.createToken({ id: user._id, email: user.email }, '1h');
-			const resetLink = process.env.NODE_ENV === 'production' ? `..../api/user/password-reset/${refreshToken}`:`localhost/api/user/password-reset/${refreshToken}`;
+		let user = await userModel.getOne(query, options);
+		logger.debug(
+			user
+				? `get user for ${query}: ${user}`
+				: `did not found user for ${query}`
+		);
+		return user;
+	} catch (error) {
+		logger.error(MESSAGES.FAILED_TO(`get user for ${query}`), error);
+		return null;
+	}
+};
+
+const generateResetPasswordLink = async username => {
+	try {
+		let user = await getUser({ username });
+		if (user && user.active) {
+			let refreshToken = encryption.createToken(
+				{ id: user._id, username: user.username },
+				'1h'
+			);
+			const resetLink =
+				process.env.NODE_ENV === 'production'
+					? `..../api/user/password-reset/${refreshToken}`
+					: `localhost/api/user/password-reset/${refreshToken}`;
 			const message = {
 				from: process.env.APP_DOMAIN,
-				to: user.email,
-				subject: 'Password reset',
+				to: user.username,
+				subject: 'Password reset'
 			};
 			const locals = {
 				name: user.firstName,
@@ -108,7 +107,11 @@ async function generateResetPasswordLink(email) {
 				link: resetLink
 			};
 			//Send email to user with info
-			let sent = await emailController.sendEmail(message,'resetPassword',locals);
+			let sent = await emailController.sendEmail(
+				message,
+				'resetPassword',
+				locals
+			);
 		}
 		// will send this message no matter the result
 		return {
@@ -120,19 +123,27 @@ async function generateResetPasswordLink(email) {
 			message: MESSAGES.PASSWORD_RESET
 		};
 	}
-}
+};
 
-async function resetPassword(email, newPassword, oldPassword) {
+const resetPassword = async (username, newPassword, oldPassword) => {
 	try {
 		const hash = encryption.hashPassword(newPassword);
-		const sameAsOldPassword = encryption.validPassword(newPassword, oldPassword);
-		if(sameAsOldPassword){ //user cant set his current password as new password
+		const sameAsOldPassword = encryption.validPassword(
+			newPassword,
+			oldPassword
+		);
+		if (sameAsOldPassword) {
+			//user cant set his current password as new password
 			return {
 				message: MESSAGES.PASSWORD_RESET_SAME_PASSWORD
 			};
 		}
-		const passwordUpdated = await userModel.updateBy({ email: email }, { password: hash }, { new : true });
-		if(!encryption.validPassword(newPassword, passwordUpdated.password)){
+		const passwordUpdated = await userModel.update(
+			{ username },
+			{ password: hash },
+			{ new: true }
+		);
+		if (!encryption.validPassword(newPassword, passwordUpdated.password)) {
 			return {
 				message: MESSAGES.PASSWORD_RESET_FAILED
 			};
@@ -140,22 +151,19 @@ async function resetPassword(email, newPassword, oldPassword) {
 		return {
 			message: MESSAGES.PASSWORD_RESET_SUCCESS
 		};
-
 	} catch (error) {
 		logger.error(MESSAGES.FAILED_TO('reset user password:'), error);
 		return {
 			message: MESSAGES.PASSWORD_RESET_FAILED
 		};
 	}
-
-}
+};
 
 module.exports = {
 	MESSAGES,
 	insert,
-	getByEmail,
-	getById,
 	getAll,
+	getUser,
 	login,
 	generateResetPasswordLink,
 	resetPassword

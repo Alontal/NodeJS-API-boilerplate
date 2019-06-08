@@ -1,5 +1,4 @@
 const mongoose = require('mongoose');
-
 const userSchema = new mongoose.Schema(
 	{
 		username: {
@@ -24,10 +23,10 @@ const userSchema = new mongoose.Schema(
 		},
 		type: {
 			type: String,
-			enum: ['owner', 'admin', 'customer', 'limited'],
-			// default: 'shopper',
+			enum: ['user', 'admin'],
+			default: 'user',
 			required: true,
-			// lowercase: true
+			lowercase: true
 		},
 		contactInfo: {
 			tel: [Number],
@@ -45,13 +44,13 @@ const userSchema = new mongoose.Schema(
 		picture: {
 			type: String
 		},
-		active:{
-			type:Boolean,
+		active: {
+			type: Boolean,
 			default: true
 		},
 		company: {
 			bnNumber: {
-				type: Number,
+				type: Number
 			},
 			accounts: [
 				{
@@ -63,18 +62,17 @@ const userSchema = new mongoose.Schema(
 					password: String,
 					role: {
 						type: String,
-						enum: ['admin', 'contact', 'limited'],
+						enum: ['admin', 'contact', 'limited']
 						// required: true,
 					},
 					address: {
 						city: String,
 						street: String,
 						houseNumber: String
-					},
-				},
-			],
-		},
-	
+					}
+				}
+			]
+		}
 	},
 	{
 		timestamps: true

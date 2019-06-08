@@ -9,7 +9,7 @@
     "pm2:start": "cross-env NODE_ENV=production pm2 start server.js",
     "pm2:start-watch": "cross-env NODE_ENV=production pm2 start server.js --watch ",
     "pm2:start-cluster": "cross-env NODE_ENV=production pm2 start server.js -i 2 --watch",
-    "test": "npm run test:lint",
+    "test": "jest",
     "test:lint": "cross-env-shell \"echo $NODE_ENV && eslint ./\"",
     "lint": "NODE_ENV=debug eslint ./",
     "test:test": "echo \"Error: no specified\" && exit 1",
@@ -33,6 +33,7 @@
     "express": "^4.16.2",
     "express-rate-limit": "^3.3.2",
     "helmet": "^3.15.0",
+    "jest": "^24.8.0",
     "jsonwebtoken": "^8.2.1",
     "lodash": "^4.17.10",
     "mkdirp": "^0.5.1",
@@ -60,6 +61,7 @@
     "eslint-plugin-prettier": "^3.0.1",
     "eslint-plugin-security": "^1.4.0",
     "nodemon": "^1.17.5",
-    "prettier": "^1.16.4"
+    "prettier": "^1.16.4",
+    "mongodb-memory-server": "^5.1.3"
   }
 }

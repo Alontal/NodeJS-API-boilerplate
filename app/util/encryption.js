@@ -6,7 +6,7 @@ const bcrypt = require('bcrypt-nodejs');
 /**
  * @description generate random id for this user
  */
-function generateUserId(){
+function generateUserId() {
 	return uuidV4();
 }
 
@@ -14,8 +14,12 @@ function generateUserId(){
  * @description Hash and salt the password with bcrypt
  * @param {*} password password to hash
  */
-function hashPassword(password){
-	return bcrypt.hashSync(password + process.env.SECRET, bcrypt.genSaltSync(8), null);
+function hashPassword(password) {
+	return bcrypt.hashSync(
+		password + process.env.SECRET,
+		bcrypt.genSaltSync(8),
+		null
+	);
 }
 
 /**
@@ -23,7 +27,7 @@ function hashPassword(password){
  * @param {*} password input password to validate
  * @param {*} savedPassword check against the saved password
  */
-function validPassword(password, savedPassword){
+function validPassword(password, savedPassword) {
 	return bcrypt.compareSync(password + process.env.SECRET, savedPassword);
 }
 
@@ -33,16 +37,15 @@ function validPassword(password, savedPassword){
  * @expiration time for token to get expired
   expressed in seconds or a string describing a time span [zeit/ms](https://github.com/zeit/ms.js).  Eg: 60, "2 days", "10h", "7d"
  */
-function createToken(data, expiresIn = '1d'){
-	return jwt.sign(_.omit(data, 'password'), process.env.SECRET, { expiresIn: expiresIn });
+function createToken(data, expiresIn = '1d') {
+	return jwt.sign(data, process.env.SECRET, { expiresIn: expiresIn });
 }
 
-function verifyToken( token ){
+function verifyToken(token) {
 	try {
 		return jwt.verify(token, process.env.SECRET);
-		
 	} catch (error) {
-		return ({err: error});	
+		return { err: error };
 	}
 }
 
