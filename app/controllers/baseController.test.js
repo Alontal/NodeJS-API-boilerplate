@@ -25,7 +25,7 @@ const user = {
 	terms: true
 };
 
-describe('CRUD Actions Checks', () => {
+describe('BaseController', () => {
 	test('should add document to database', async () => {
 		const added = await userModel.insert(user);
 		expect(added).toBeDefined();
