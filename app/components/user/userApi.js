@@ -47,16 +47,20 @@ router.post(
 	auth.decodeToken,
 	asyncMiddleware(async (req, res) => {
 		// let u = res.req.authenticatedUser; // need to check
-		let u = req.body;
-		let response = await userController.getByEmail(u.email);
+		let user = req.body;
+		let response = await userController.getUser({ username: user.username });
 		res.status(200).send(responseHandler.send(response));
 	})
 );
 
 router.get(
 	'/get-all',
+	// auth.decodeToken,
+	// auth.loadUserFromToken,
+	// auth.andRestrictTo(['admin']),
 	asyncMiddleware(async (req, res) => {
-		let response = await userController.getAll();
+		let filters = req.body ? {} : req.body;
+		let response = await userController.getAll(filters);
 		res.status(200).send(responseHandler.send(response));
 	})
 );
