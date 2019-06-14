@@ -1,3 +1,4 @@
+// headers to use in development , evil.com-used by CORS extension, undefined used by postman... 
 const LOCAL_WHITELIST = [
 	'http://localhost:3000',
 	'http://localhost:3001',
@@ -13,8 +14,23 @@ const PRODUCTION_WHITELIST = [
 
 const CORS_WHITE_LIST = process.env.NODE_ENV === 'production' ? PRODUCTION_WHITELIST : LOCAL_WHITELIST;
 
-// above is for normal dev use , evil.com-used by CORS extension, undefined used by postman... 
+const LUSCA_OPTIONS = {
+	csrf: true,
+	csp: {
+		policy: {
+			'default-src': '\'self\'',
+			'img-src': '*'
+		  }
+	},
+	xframe: 'SAMEORIGIN',
+	p3p: 'ABCDEF',
+	hsts: {maxAge: 31536000, includeSubDomains: true, preload: true},
+	xssProtection: true,
+	nosniff: true,
+	referrerPolicy: 'same-origin'
+};
 
 module.exports = {
 	CORS_WHITE_LIST,
+	LUSCA_OPTIONS
 };

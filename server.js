@@ -1,9 +1,12 @@
 const express = require('express');
 const app = express();
 const helmet = require('helmet');
+const session = require('express-session');
+const lusca = require('lusca');
 const rateLimit = require('express-rate-limit');
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
+const { LUSCA_OPTIONS } = require('./config/config');
 // show nice console text
 const text = require('./loadingCliText');
 console.log(text);
@@ -24,6 +27,16 @@ const apiLimiter = rateLimit({
 	windowMs: 15 * 60 * 1000, // 15 minutes
 	max: 100
 });
+
+// create session for requests
+app.use(session({
+	secret: process.env.SESSION_SECRET,
+	resave: true,
+	saveUninitialized: true
+}));
+
+// add lusca to protect header
+app.use(lusca(LUSCA_OPTIONS));
  
 // only apply to requests that begin with /api/
 app.use('/api/', apiLimiter);
