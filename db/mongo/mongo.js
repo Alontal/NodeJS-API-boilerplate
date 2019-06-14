@@ -9,7 +9,7 @@ class Db {
 			process.env.MONGO_DB_CONNECTION_STR,
 			{ useNewUrlParser: true },
 			err => {
-				if (err) return logger.info(`Coudlnt connect to mongoDB error: ${err}`);
+				if (err) return logger.info(`Could not connect to mongoDB error: ${err}`);
 				logger.info(
 					'Connected to mongoDB at:' + process.env.MONGO_DB_CONNECTION_STR
 				);
