@@ -15,15 +15,17 @@ if (!config.database || !config.host || !config.user || !config.password) {
 } else {
 	logger.info('making connection using this db conf:', config);
 	pool = mysql.createPool(config);
-	pool.getSqlConnection = () => 
-		pool.getConnection().disposer(function (connection) {
+	pool.getSqlConnection = () =>
+		pool.getConnection().disposer(function(connection) {
 			pool.releaseConnection(connection);
 		});
-	
 }
 
 E.get = () => {
-	if (!pool) throw Error('Mysql pool not defined, please check you .env file and make sure mysql is set');
+	if (!pool)
+		throw Error(
+			'Mysql pool not defined, please check you .env file and make sure mysql is set'
+		);
 	return pool;
 };
 
@@ -34,13 +36,12 @@ E.addNewPool = (name, config) => {
 	try {
 		let pool = mysql.createPool(config);
 		pool.getSqlConnection = () => {
-			return pool.getConnection().disposer(function (connection) {
+			return pool.getConnection().disposer(function(connection) {
 				pool.releaseConnection(connection);
 			});
 		};
 		pool.executeSql = E.executeSql;
 		E.pools[name] = pool;
-
 	} catch (error) {
 		logger.error('addNewPool', error);
 	}
@@ -49,14 +50,18 @@ E.addNewPool = (name, config) => {
 E.executeSql = {
 	query: async (query, params, database = E.get()) => {
 		if (!pool) {
-			if (!pool) throw Error('Mysql pool not defined, please check you .env file and make sure mysql is set');
+			if (!pool)
+				throw Error(
+					'Mysql pool not defined, please check you .env file and make sure mysql is set'
+				);
 
-			logger.warning('missing mysql pool !!');
+			logger.warn('missing mysql pool !!');
 			return;
 		}
 		try {
 			let res = await database.query(query, params);
-			if (res.length === 0) logger.debug(`"${query} ${params}" return no results`, res);
+			if (res.length === 0)
+				logger.debug(`"${query} ${params}" return no results`, res);
 			return res;
 		} catch (error) {
 			logger.error('MySQL failed with: ', {
@@ -71,8 +76,13 @@ E.executeSql = {
 	},
 	insertIntoTable: async (tableName, array) =>
 		this.executeSql.query('INSERT INTO ' + tableName + ' SET ? ;', array),
-	getTableByName: (tableName) => 
+	getTableByName: tableName =>
 		this.executeSql.query('SELECT * FROM ' + tableName),
-	updateTable: (table, obj, where_key, where_value) => 
-		this.executeSql.query('UPDATE ? SET ?  WHERE ? = ? ', [table, obj, where_key, where_value])
+	updateTable: (table, obj, where_key, where_value) =>
+		this.executeSql.query('UPDATE ? SET ?  WHERE ? = ? ', [
+			table,
+			obj,
+			where_key,
+			where_value
+		])
 };
