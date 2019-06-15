@@ -15,7 +15,7 @@ const PRODUCTION_WHITELIST = [
 const CORS_WHITE_LIST = process.env.NODE_ENV === 'production' ? PRODUCTION_WHITELIST : LOCAL_WHITELIST;
 
 const LUSCA_OPTIONS = {
-	csrf: true,
+	csrf: process.env.NODE_ENV === 'production' ? true : false,
 	csp: {
 		policy: {
 			'default-src': '\'self\'',
