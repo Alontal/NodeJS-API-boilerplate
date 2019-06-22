@@ -5,31 +5,28 @@ const MESSAGES = {
 	UNAUTHORIZED: 'Unauthorized',
 	MISSING_TOKEN: 'No token provided, create new token and try again.',
 	AUTHENTICATION_FAILED: 'Failed to authenticate.',
-	UNAUTHORIZED_ATTEMPT: (url, email, id) => `Unauthorized attempt was blocked trying access ${url} was made by ${email} id:${id}`
+	UNAUTHORIZED_ATTEMPT: (url, email, id) =>
+		`Unauthorized attempt was blocked trying access ${url} was made by ${email} id:${id}`
 };
 
 function decodeToken(req, res, next) {
 	const token = req.headers['x-access-token'] || req.cookies['token'];
-	if (!token){
+	if (!token) {
 		logger.debug(MESSAGES.MISSING_TOKEN);
-		return res
-			.status(403)
-			.send( MESSAGES.MISSING_TOKEN);
+		return res.status(403).send(MESSAGES.MISSING_TOKEN);
 	}
 	const decodedToken = encryption.verifyToken(token);
 	if (decodedToken.err) {
 		logger.debug(MESSAGES.AUTHENTICATION_FAILED, decodedToken.err);
-		return res
-			.status(403)
-			.send( MESSAGES.AUTHENTICATION_FAILED);
+		return res.status(403).send(MESSAGES.AUTHENTICATION_FAILED);
 	}
 	// auth success
 	req.authenticatedUser = decodedToken;
 	next();
-};
+}
 
 async function loadUserFromToken(req, res, next) {
-	const {userController}  = require('../components/user');
+	const { userController } = require('../components/user');
 	// Fetch the user from decodedToken token
 	const user = await userController.getById(req.authenticatedUser._id);
 	// we can extend this and fetch user from db to get his current data
@@ -37,10 +34,15 @@ async function loadUserFromToken(req, res, next) {
 		req.user = user.toObject();
 		next();
 	} else {
-		logger.warning('loadUserFromToken' + MESSAGES.UNAUTHORIZED_ATTEMPT(req.originalUrl, req.authenticatedUser.email, req.authenticatedUser._id ));
-		return res
-			.status(403)
-			.send( MESSAGES.UNAUTHORIZED);
+		logger.warn(
+			'loadUserFromToken' +
+				MESSAGES.UNAUTHORIZED_ATTEMPT(
+					req.originalUrl,
+					req.authenticatedUser.email,
+					req.authenticatedUser._id
+				)
+		);
+		return res.status(403).send(MESSAGES.UNAUTHORIZED);
 	}
 }
 
@@ -54,23 +56,33 @@ function andRestrictToSelf(req, res, next) {
 		// such as UnauthorizedError or similar so that you
 		// can handle these can be special-cased in an error handler
 		// (view ./examples/pages for this)
-		logger.warning('andRestrictToSelf' +MESSAGES.UNAUTHORIZED_ATTEMPT(req.originalUrl, req.authenticatedUser.email, req.authenticatedUser._id ));
-		return res
-			.status(403)
-			.send( MESSAGES.UNAUTHORIZED);
+		logger.warn(
+			'andRestrictToSelf' +
+				MESSAGES.UNAUTHORIZED_ATTEMPT(
+					req.originalUrl,
+					req.authenticatedUser.email,
+					req.authenticatedUser._id
+				)
+		);
+		return res.status(403).send(MESSAGES.UNAUTHORIZED);
 	}
 }
 
 function andRestrictTo(typeArr = []) {
-	if(typeof typeArr === 'string' ) typeArr[0] = typeArr;
+	if (typeof typeArr === 'string') typeArr[0] = typeArr;
 	return function(req, res, next) {
-		if ( typeArr.includes(req.user.type) ){
+		if (typeArr.includes(req.user.type)) {
 			next();
 		} else {
-			logger.warning('andRestrictTo' + MESSAGES.UNAUTHORIZED_ATTEMPT(req.originalUrl, req.authenticatedUser.email, req.authenticatedUser._id ));
-			return res
-				.status(403)
-				.send(MESSAGES.UNAUTHORIZED);
+			logger.warn(
+				'andRestrictTo' +
+					MESSAGES.UNAUTHORIZED_ATTEMPT(
+						req.originalUrl,
+						req.authenticatedUser.email,
+						req.authenticatedUser._id
+					)
+			);
+			return res.status(403).send(MESSAGES.UNAUTHORIZED);
 		}
 	};
 }
@@ -105,4 +117,3 @@ module.exports = {
 	andRestrictToSelf,
 	andRestrictTo
 };
-
