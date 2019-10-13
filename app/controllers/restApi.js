@@ -12,19 +12,19 @@ class RestApi {
       baseRoute: '',
       get: {
         function: null,
-        middleWare: []
+        middleware: []
       },
       insert: {
           function: null,
-          middleWare: []
+          middleware: []
       },
       delete: {
         function: null,
-        middleWare: []
+        middleware: []
       },
       update: {
         function: null,
-        middleWare: []
+        middleware: []
       },
     }
   ) {
@@ -64,7 +64,7 @@ class RestApi {
   restApiRoutes() {
     this.router.get(
       this.baseRoute.toString(),
-      this.get.middleWare,
+      this.get.middleware,
       asyncMiddleware(async (req, res) => {
         const { query } = req;
         const { limit, order, options } = req.body;
@@ -80,7 +80,7 @@ class RestApi {
     );
     this.router.post(
       this.baseRoute.toString(),
-      this.insert.middleWare,
+      this.insert.middleware,
       asyncMiddleware(async (req, res) => {
         const { data, where } = req.body;
         try {
@@ -103,7 +103,7 @@ class RestApi {
     );
     this.router.delete(
       this.baseRoute.toString(),
-      this.delete.middleWare,
+      this.delete.middleware,
       asyncMiddleware(async (req, res) => {
         const { where } = req.body;
         try {
@@ -118,7 +118,7 @@ class RestApi {
     );
     this.router.put(
       this.baseRoute.toString(),
-      this.update.middleWare,
+      this.update.middleware,
       asyncMiddleware(async (req, res) => {
         const { where, data } = req.body;
         try {
