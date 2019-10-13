@@ -1,7 +1,7 @@
 const logger = require('../util/logger');
 const { isEqual } = require('lodash');
 
-class BaseController {
+class BaseControllerNoSql {
 	constructor(model) {
 		this.model = model;
 	}
@@ -73,4 +73,4 @@ class BaseController {
 	}
 }
 
-module.exports = BaseController;
+module.exports = BaseControllerNoSql;

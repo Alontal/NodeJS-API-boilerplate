@@ -2,12 +2,12 @@ const express = require('express');
 
 const { asyncMiddleware } = require('../middleware');
 const { responseHandler } = require('../util');
-const BaseModel = require('./baseControllerSql');
+const {BaseModelSql,BaseControllerNoSql} = require('./');
 
 class RestApi {
   constructor(
     name,
-    model = new BaseModel(),
+    model = new BaseModelSql() || new BaseControllerNoSql(),
     options = {
       baseRoute: '',
       get: {
