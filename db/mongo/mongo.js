@@ -1,18 +1,16 @@
 const mongoose = require('mongoose'),
-	logger = require('../../app/util/logger');
+	logger = require('../../app/util/logger'),
+	config = require('./config/config')
 
 class Db {
 	constructor() {}
 	connectToDB() {
-		// logger.info(`connecting to ${process.env.MONGO_DB_CONNECTION_STR}`);
 		mongoose.connect(
 			process.env.MONGO_DB_CONNECTION_STR,
-			{ useNewUrlParser: true },
+			config,
 			err => {
-				if (err) return logger.info(`Could not connect to mongoDB error: ${err}`);
-				logger.info(
-					'Connected to mongoDB at:' + process.env.MONGO_DB_CONNECTION_STR
-				);
+				if (err) return logger.error(`Could not connect to mongoDB error: ${err}`);
+				logger.info('Connected to mongoDB at:' + process.env.MONGO_DB_CONNECTION_STR);
 			}
 		);
 		mongoose.set('useCreateIndex', true);
