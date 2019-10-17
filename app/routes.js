@@ -1,4 +1,4 @@
-const { userSql,  docs, email } = require('./components');
+const { userSql, user,  docs, email } = require('./components');
 const cors_whitelist  = require('../config/config').CORS_WHITE_LIST;
 const path = require('path');
 require('./bootstrap');// init crons on boot
@@ -16,7 +16,7 @@ const corsOptions = {
 };
 module.exports = (app) => {
 
-	app.use('/api/user', cors(corsOptions), userSql.userApi);
+	app.use('/api/user', cors(corsOptions), process.env.DB_MODE === 'sql' ? userSql.userApi: user.userApi );
 	// app.use('/api/email',  email.emailApi);
 	// app.use('/api/docs',  docs.docsApi);
 
