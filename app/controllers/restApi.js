@@ -2,12 +2,12 @@ const express = require('express');
 
 const { asyncMiddleware } = require('../middleware');
 const { responseHandler } = require('../util');
-const {BaseModelSql,BaseControllerNoSql} = require('./');
+const {BaseControllerSql, BaseControllerNoSql} = require('./');
 
 class RestApi {
   constructor(
     name,
-    model = new BaseModelSql() || new BaseControllerNoSql(),
+    model = new BaseControllerSql() || new BaseControllerNoSql(),
     options = {
       baseRoute: '',
       get: {
@@ -32,10 +32,10 @@ class RestApi {
     this.model = model;
     this.router = express.Router();
     this.baseRoute = options.baseRoute || '/';
-    if (options.get.function) this.get = options.get;
-    if (options.insert.function) this.insert = options.insert;
-    if (options.delete.function) this.delete = options.delete;
-    if (options.update.function) this.update = options.update;
+    if (options.get) this.get = options.get;
+    if (options.insert) this.insert = options.insert;
+    if (options.delete) this.delete = options.delete;
+    if (options.update) this.update = options.update;
     return this.restApiRoutes();
   }
 
