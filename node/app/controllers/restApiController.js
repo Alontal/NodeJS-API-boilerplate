@@ -110,13 +110,13 @@ class RestApi {
       this.baseRoute.toString(),
       this.put.middleware,
       asyncMiddleware(async (req, res) => {
-        const { data } = req.body;
+        const { data, options } = req.body;
         try {
           let response;
           if (this.put.function) {
-            response = await this.put.function(data.data, data.options);
+            response = await this.put.function(data, options);
           } else {
-            response = await this.model.update(data.data, data.options);
+            response = await this.model.update(data, options);
           }
           return res.status(200).send(response);
         } catch (error) {
@@ -130,13 +130,13 @@ class RestApi {
       this.baseRoute.toString(),
       this.delete.middleware,
       asyncMiddleware(async (req, res) => {
-        const { where } = req.body;
+        const { where, options } = req.body;
         try {
           let response;
           if (this.delete.function) {
-            response = await this.delete.function(where);
+            response = await this.delete.function(where, options);
           } else {
-            response = await this.model.delete(where);
+            response = await this.model.delete(where, options);
           }
           return res.status(200).send(response);
         } catch (error) {
