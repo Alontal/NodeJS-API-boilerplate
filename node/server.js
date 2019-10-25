@@ -1,5 +1,5 @@
 const express = require('express');
-// require('dotenv').config();
+require('dotenv').config();
 
 const app = express();
 const helmet = require('helmet');
@@ -17,7 +17,7 @@ const { logger } = require('./app/util');
 
 
 // eslint-disable-next-line no-undef
-const { PORT = 8080, SESSION_SECRET } = process.env;
+const { PORT, SESSION_SECRET } = process.env;
 // set helmet for security
 app.use(helmet());
 // Parse req made to app

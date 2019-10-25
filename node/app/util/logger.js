@@ -6,17 +6,17 @@ const fs = require('fs');
 const mkdirp = require('mkdirp');
 require('winston-daily-rotate-file');
 
-const { ENVIRONMENT, SERVICE_NAME = 'SERVICE_NAME' } = process.env;
+const { NODE_ENV, SERVICE_NAME = 'SERVICE_NAME' } = process.env;
 const { dateFormats } = require('.');
 
 
 const loggerConfig = {
   maxSize: '30m',
   maxFiles: '3d',
-  zippedArchive: true
+  zippedArchive: false
 };
-
-const LOG_DIR = path.resolve(__dirname, '..', '..', 'LOG/');
+const LOG_DIR = path.resolve(path.dirname(require.main.filename), `../log/${SERVICE_NAME.toLowerCase()}`);
+// const LOG_DIR = path.resolve(__dirname, '..', '..', 'LOG/');
 if (!fs.existsSync(LOG_DIR)) {
   mkdirp(LOG_DIR, (err) => {
     if (err) log().error(err);
@@ -50,12 +50,12 @@ const consoleTransport = new transports.Console({
     format.simple(),
     format.timestamp({
       format: dateFormats.SHORT_DATETIME
-    }),
-    format.printf(
-      (info) => `[${info.timestamp}] [${ENVIRONMENT}] [${SERVICE_NAME}] [${info.level}]: ${
-        info.message
-      }${JSON.stringify((info.data || info.stack || info.error))}`
-    )
+    })
+    // format.printf(
+    //   (info) => `[${info.timestamp}] [${NODE_ENV}] [${SERVICE_NAME}] [${info.level}]: ${
+    //     info.message
+    //   }${JSON.stringify((info.data || info.stack || info.error))}`
+    // )
   )
 });
 
@@ -65,7 +65,7 @@ const logger = createLogger({
     format.timestamp({
       format: dateFormats.SHORT_DATETIME
     }),
-    format.label({ label: { environment: ENVIRONMENT, service_name: SERVICE_NAME }, message: false }),
+    format.label({ label: { environment: NODE_ENV, service_name: SERVICE_NAME }, message: false }),
     format.errors({ stack: true }),
     format.splat()
     // format.json()
@@ -87,25 +87,25 @@ if (process.env.NODE_ENV !== 'production') {
   logger.add(consoleTransport);
 } else {
 // prevent winston to stop if Error occurred
-  logger.exitOnError = false;
+  // logger.exitOnError = false;
 }
 
 // *****
 // Allows for JSON logging
 // *****
 
-// logger.log({
-//   level: 'info',
-//   message: 'Pass an object and this works',
-//   additional: 'properties',
-//   are: 'passed along'
-// });
+logger.log({
+  level: 'info',
+  message: 'Pass an object and this works',
+  additional: 'properties',
+  are: 'passed along'
+});
 
-// logger.info({
-//   message: 'Use a helper method if you want',
-//   additional: 'properties',
-//   are: 'passed along'
-// });
+logger.info({
+  message: 'Use a helper method if you want',
+  additional: 'properties',
+  are: 'passed along'
+});
 
 // // *****
 // // Allows for parameter-based logging
@@ -134,13 +134,13 @@ if (process.env.NODE_ENV !== 'production') {
 //   // info: test message first second {number: 123}
 //   logger.log('info', 'test message %s, %s', 'first', 'second', { number: 123 });
 
-//   // prints "Found error at %s"
-//   logger.info('Found %s at %s', 'error', new Date());
-//   logger.info('Found %s at %s', 'error', new Error('chill winston'));
-//   logger.info('Found %s at %s', 'error', /WUT/);
-//   logger.info('Found %s at %s', 'error', true);
-//   logger.info('Found %s at %s', 'error', 100.00);
-//   logger.info('Found %s at %s', 'error', ['1, 2, 3']);
+// prints "Found error at %s"
+logger.info('Found %s at %s', 'error', new Date());
+logger.info('Found %s at %s', 'error', new Error('chill winston'));
+logger.info('Found %s at %s', 'error', /WUT/);
+logger.info('Found %s at %s', 'error', true);
+logger.info('Found %s at %s', 'error', 100.00);
+logger.info('Found %s at %s', 'error', ['1, 2, 3']);
 
 //   // *****
 //   // Allows for logging Error instances

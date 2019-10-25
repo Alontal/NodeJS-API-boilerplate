@@ -31,8 +31,8 @@ services:
     #   - app-network
     ports:
       - "${PG_SQL_PORT}:${PG_SQL_PORT}"
-    volumes:
-      - /srv/docker/postgresql:/var/lib/postgresql
+    # volumes:
+    #   - /srv/docker/postgresql:/var/lib/postgresql
 
   #****************
   # Mongo conf

@@ -1,2 +1,2 @@
-module.exports.baseModelSQL = require("./baseModelSQLSQL");
-module.exports.baseControllerNOSQL = require("./baseControllerNOSQL");
+module.exports.baseModelSQL = require('./baseModelSQL');
+module.exports.baseControllerNOSQL = require('./baseControllerNOSQL');

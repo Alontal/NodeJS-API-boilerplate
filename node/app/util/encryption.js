@@ -1,7 +1,7 @@
 const uuidV4 = require('uuid/v4');
 const _ = require('lodash');
 const jwt = require('jsonwebtoken');
-const bcrypt = require('bcrypt-nodejs');
+const bcrypt = require('bcrypt');
 
 /**
  * @description Generate random id for this user.
@@ -15,11 +15,7 @@ function generateUserId() {
  * @param password - Password to hash.
  */
 function hashPassword(password) {
-  return bcrypt.hashSync(
-    password + process.env.SECRET,
-    bcrypt.genSaltSync(8),
-    null
-  );
+  return bcrypt.hash(password + process.env.SECRET, bcrypt.genSaltSync(8));
 }
 
 /**
@@ -28,7 +24,7 @@ function hashPassword(password) {
  * @param savedPassword - Check against the saved password.
  */
 function validPassword(password, savedPassword) {
-  return bcrypt.compareSync(password + process.env.SECRET, savedPassword);
+  return bcrypt.compare(password + process.env.SECRET, savedPassword);
 }
 
 /**

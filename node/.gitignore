@@ -35,4 +35,4 @@ Thumbs.db
 .env.*
 
 # log folder
-/LOG
+LOG
