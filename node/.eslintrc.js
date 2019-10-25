@@ -12,7 +12,12 @@ module.exports = {
     ecmaVersion: 2019,
     sourceType: 'module'
   },
-  extends: ['eslint:recommended', 'airbnb-base', 'plugin:security/recommended', 'plugin:prettier/recommended'],
+  extends: [
+    'eslint:recommended',
+    'airbnb-base',
+    'plugin:security/recommended',
+    'plugin:prettier/recommended'
+  ],
   plugins: ['promise', 'jsdoc', 'security', 'import', 'prettier'],
   rules: {
     'prettier/prettier': ['error', { singleQuote: true, parser: 'flow' }],

@@ -40,11 +40,7 @@ class RestApi {
   }
 
   // ADD new custom route
-  registerRoute(
-    route,
-    routeFunction,
-    options = { middleware: [], message: '', type: 'get' }
-  ) {
+  registerRoute(route, routeFunction, options = { middleware: [], message: '', type: 'get' }) {
     this.router[options.type.toString().toLowerCase()](
       this.baseRoute.toString(),
       options.middleware,
@@ -55,11 +51,9 @@ class RestApi {
           const apiResponse = await routeFunction(data || query || params);
           return res.status(200).send(apiResponse);
         } catch (error) {
-          const apiResponse = responseHandler(
-            `${options.type} ${route} ${this.name}`,
-            false,
-            { error }
-          );
+          const apiResponse = responseHandler(`${options.type} ${route} ${this.name}`, false, {
+            error
+          });
           return res.status(500).send(apiResponse.message);
         }
       })
@@ -106,11 +100,7 @@ class RestApi {
           }
           return res.status(200).send(response);
         } catch (error) {
-          const response = responseHandler(
-            `/delete ${this.name}`,
-            false,
-            error
-          );
+          const response = responseHandler(`/delete ${this.name}`, false, error);
           return res.status(500).send(response);
         }
       })
@@ -150,11 +140,7 @@ class RestApi {
           }
           return res.status(200).send(response);
         } catch (error) {
-          const response = responseHandler(
-            `/delete ${this.name}`,
-            false,
-            error
-          );
+          const response = responseHandler(`/delete ${this.name}`, false, error);
           return res.status(500).send(response);
         }
       })
