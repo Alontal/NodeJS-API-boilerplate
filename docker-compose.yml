@@ -1,0 +1,74 @@
+version: "3"
+
+services:
+  nginx:
+    build:
+      context: ./nginx
+    tty: true
+    links:
+      - node:node
+    ports:
+      - "80:80"
+    networks:
+      - app-network
+
+  node:
+    build:
+      context: ./node
+    networks:
+      - app-network
+    env_file:
+      - ./.env
+    volumes:
+      - logs:/log/
+
+  potgreSQL:
+    restart: always
+    image: sameersbn/postgresql:10-2
+    env_file:
+      - ./.env
+    networks:
+      - app-network
+    ports:
+      - "${PG_SQL_PORT}:${PG_SQL_PORT}"
+    volumes:
+      - /srv/docker/postgresql:/var/lib/postgresql
+
+  #****************
+  # Mongo conf
+  #****************
+  # mongo:
+  #   container_name: database_mongo
+  #   image: mongo:3.4.19-jessie
+  #   env_file:
+  #     - ".env"
+  #   volumes:
+  #     - ./databases/db/mongo:/data/db
+  #     - ./docker-conf/mongo/mongo-conf.js:/docker-entrypoint-initdb.d/001_users.js:ro
+  #   networks:
+  #     - app-network
+  #   expose:
+  #     - "27017"
+  #   ports:
+  #     - "27017:27017"
+  # mongoexpress:
+  #   image: mongo-express
+  #   container_name: mongo_admin
+  #   env_file:
+  #     - ".env"
+  #   ports:
+  #     - "${ME_CONFIG_PORT}:${ME_CONFIG_PORT}"
+  #   links:
+  #     - mongo
+  #   networks:
+  #     - app-network
+#****************
+# end Mongo
+#****************
+volumes:
+  logs:
+networks:
+  app-network:
+    driver: bridge
+###### To run docker-compose.dev.yml is development run the cmd:
+# docker-compose up --build
