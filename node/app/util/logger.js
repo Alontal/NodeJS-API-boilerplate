@@ -50,12 +50,12 @@ const consoleTransport = new transports.Console({
     format.simple(),
     format.timestamp({
       format: dateFormats.SHORT_DATETIME
-    })
-    // format.printf(
-    //   (info) => `[${info.timestamp}] [${NODE_ENV}] [${SERVICE_NAME}] [${info.level}]: ${
-    //     info.message
-    //   }${JSON.stringify((info.data || info.stack || info.error))}`
-    // )
+    }),
+    format.printf(
+      (info) => `[${info.timestamp}] [${NODE_ENV}] [${SERVICE_NAME}] [${info.level}]: ${
+        info.message
+      }${JSON.stringify((info.data || info.stack || info.error))}`
+    )
   )
 });
 

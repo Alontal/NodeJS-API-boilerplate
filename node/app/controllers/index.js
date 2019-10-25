@@ -1,1 +1,1 @@
-module.exports.restApiController = require('./restApiController');
+module.exports.RestApiController = require('./restApiController');

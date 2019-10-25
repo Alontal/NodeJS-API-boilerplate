@@ -1,15 +1,15 @@
-const express = require("express");
+const express = require('express');
 
-const { asyncMiddleware } = require("../middleware");
-const { responseHandler } = require("../util");
-const { baseModelSQL } = require(".");
+const { asyncMiddleware } = require('../middleware');
+const { responseHandler } = require('../util');
+const { BaseModelSQL } = require('../models/baseModelSQL');
 
 class RestApi {
   constructor(
     name,
-    model = new baseModelSQL(),
+    model = new BaseModelSQL(),
     options = {
-      baseRoute: "",
+      baseRoute: '',
       get: {
         function: null,
         middleware: []
@@ -31,7 +31,7 @@ class RestApi {
     this.name = name;
     this.model = model;
     this.router = express.Router();
-    this.baseRoute = options.baseRoute || "/";
+    this.baseRoute = options.baseRoute || '/';
     if (options.get) this.get = options.get;
     if (options.post) this.post = options.post;
     if (options.put) this.put = options.put;
@@ -43,7 +43,7 @@ class RestApi {
   registerRoute(
     route,
     routeFunction,
-    options = { middleware: [], message: "", type: "get" }
+    options = { middleware: [], message: '', type: 'get' }
   ) {
     this.router[options.type.toString().toLowerCase()](
       this.baseRoute.toString(),
@@ -77,7 +77,7 @@ class RestApi {
         const { limit, order, options } = req.body; // TODO add limit && order to query
         try {
           const getQuery = query || (options && options.where);
-          if (!getQuery) res.status(500).send("missing query || where");
+          if (!getQuery) res.status(500).send('missing query || where');
           let response;
           if (this.get.function) {
             response = await this.get.function(getQuery);
@@ -94,7 +94,7 @@ class RestApi {
     // POST
     this.router.post(
       this.baseRoute.toString(),
-      this.insert.middleware,
+      this.post.middleware,
       asyncMiddleware(async (req, res) => {
         const { data } = req.body;
         try {
@@ -118,7 +118,7 @@ class RestApi {
     // PUT
     this.router.put(
       this.baseRoute.toString(),
-      this.update.middleware,
+      this.put.middleware,
       asyncMiddleware(async (req, res) => {
         const { data } = req.body;
         try {

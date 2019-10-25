@@ -17,7 +17,7 @@ const corsOptions = {
   }
 };
 module.exports = (app) => {
-  // app.use('/api/user', cors(corsOptions), process.env.DB_MODE === 'sql' ? userSql.userApi : user.userApi);
+  app.use('/api/user', cors(corsOptions), process.env.DB_MODE === 'sql' ? userSql.userApi : user.userApi);
   // app.use('/api/email',  email.emailApi);
   // app.use('/api/docs',  docs.docsApi);
 
