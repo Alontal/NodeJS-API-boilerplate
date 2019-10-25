@@ -15,7 +15,6 @@ const { logger } = require('./app/util');
 
 // logger.write(text);
 
-
 // eslint-disable-next-line no-undef
 const { PORT, SESSION_SECRET } = process.env;
 // set helmet for security
@@ -63,4 +62,6 @@ require('./app/util/errorHandler');
 require('./app/bootstrap');
 
 // start our server on port set in .env file
-app.listen(PORT, () => logger.info(`Server started running... on port: ${PORT}`));
+app.listen(PORT, () =>
+  logger.info(`Server started running... on port: ${PORT}`)
+);

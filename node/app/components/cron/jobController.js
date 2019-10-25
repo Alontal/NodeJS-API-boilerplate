@@ -15,6 +15,6 @@ E.send_notifications = (cron_expr = '0 * * * * *') => {
 };
 
 E.update = (name, id, interval) => {
-  if (!name, id || !interval) return 'missing name or interval';
+  if ((!name, id || !interval)) return 'missing name or interval';
   return new Job().update(name, id, interval);
 };

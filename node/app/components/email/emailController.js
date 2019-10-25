@@ -9,7 +9,6 @@ const readdir = promisify(fs.readdir);
 const { emailModel } = require('.');
 const { logger } = require('../../util');
 
-
 const MESSAGES = {
   FAILED_TO_SEND: 'failed to send email...',
   EMAIL_SENT: 'failed to send email...',
@@ -87,7 +86,7 @@ async function decideSender(email) {
     if (email.includes('@')) {
       // send email to all-users
       if (email === 'all-users') {
-        return (await User.getAllUsers()).map((u) => u.email);
+        return (await User.getAllUsers()).map(u => u.email);
       }
       // send email to admins in  system
       if (email === 'all-admins') {

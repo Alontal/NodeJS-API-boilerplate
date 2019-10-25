@@ -4,7 +4,8 @@ const MESSAGES = {
   UNAUTHORIZED: 'Unauthorized',
   MISSING_TOKEN: 'No token provided, create new token and try again.',
   AUTHENTICATION_FAILED: 'Failed to authenticate.',
-  UNAUTHORIZED_ATTEMPT: (url, email, id) => `Unauthorized attempt was blocked trying access ${url} was made by ${email} id:${id}`
+  UNAUTHORIZED_ATTEMPT: (url, email, id) =>
+    `Unauthorized attempt was blocked trying access ${url} was made by ${email} id:${id}`
 };
 
 /**
@@ -43,12 +44,11 @@ async function loadUserFromToken(req, res, next) {
     next();
   } else {
     logger.warn(
-      `loadUserFromToken${
-        MESSAGES.UNAUTHORIZED_ATTEMPT(
-          req.originalUrl,
-          req.authenticatedUser.email,
-          req.authenticatedUser._id
-        )}`
+      `loadUserFromToken${MESSAGES.UNAUTHORIZED_ATTEMPT(
+        req.originalUrl,
+        req.authenticatedUser.email,
+        req.authenticatedUser._id
+      )}`
     );
     return res.status(403).send(MESSAGES.UNAUTHORIZED);
   }
@@ -70,12 +70,11 @@ function andRestrictToSelf(req, res, next) {
     // can handle these can be special-cased in an error handler
     // (view ./examples/pages for this)
     logger.warn(
-      `andRestrictToSelf${
-        MESSAGES.UNAUTHORIZED_ATTEMPT(
-          req.originalUrl,
-          req.authenticatedUser.email,
-          req.authenticatedUser._id
-        )}`
+      `andRestrictToSelf${MESSAGES.UNAUTHORIZED_ATTEMPT(
+        req.originalUrl,
+        req.authenticatedUser.email,
+        req.authenticatedUser._id
+      )}`
     );
     return res.status(403).send(MESSAGES.UNAUTHORIZED);
   }
@@ -89,12 +88,11 @@ function andRestrictTo(typeArr = []) {
   return (req, res, next) => {
     if (!typeArr.includes(req.user.type)) {
       logger.warn(
-        `andRestrictTo${
-          MESSAGES.UNAUTHORIZED_ATTEMPT(
-            req.originalUrl,
-            req.authenticatedUser.email,
-            req.authenticatedUser._id
-          )}`
+        `andRestrictTo${MESSAGES.UNAUTHORIZED_ATTEMPT(
+          req.originalUrl,
+          req.authenticatedUser.email,
+          req.authenticatedUser._id
+        )}`
       );
       return res.status(403).send(MESSAGES.UNAUTHORIZED);
     }

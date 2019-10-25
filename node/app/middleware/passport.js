@@ -2,7 +2,7 @@ const { logger, encryption } = require('../app/util');
 const LocalStrategy = require('passport-local').Strategy;
 const { userService } = require('../app/components/user');
 
-module.exports = (passport) => {
+module.exports = passport => {
   passport.serializeUser((user, done) => {
     done(null, { email: user.email, id: user.id, token: user.token });
   });

@@ -1,8 +1,10 @@
 const { logger } = require('.');
 
-const handleResponse = (operation, status = true, {
-  data, error, logLevel = 'info', overrideMessage
-}) => {
+const handleResponse = (
+  operation,
+  status = true,
+  { data, error, logLevel = 'info', overrideMessage }
+) => {
   const MSG = {
     SUCCESS: `${operation} finished Successfully`,
     FINISHED: `${operation} finished`

@@ -19,7 +19,7 @@ function closeProcess() {
   }, 2000);
 }
 // catch ERRORS
-process.on('uncaughtException', (err) => {
+process.on('uncaughtException', err => {
   logger.error('uncaughtException', err);
   closeProcess();
 });
@@ -29,11 +29,11 @@ process.on('unhandledRejection', (reason, p) => {
   closeProcess();
 });
 
-process.on('warning', (warning) => {
+process.on('warning', warning => {
   logger.error('warning :', `${warning.name} : ${warning.message}`);
 });
 
-process.on('exit', (warning) => {
+process.on('exit', warning => {
   logger.error('warning :', `${warning.name} : ${warning.message}`);
   // TODO: send email notify system crashed with error and stack
 });

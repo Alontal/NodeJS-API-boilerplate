@@ -15,7 +15,8 @@ const DATE_FORMATS = {
   SHORT_DATE: 'DD MM YYYY, HH:mm:ss'
 };
 
-const CORS_WHITE_LIST = NODE_ENV === 'production' ? PRODUCTION_WHITELIST : LOCAL_WHITELIST;
+const CORS_WHITE_LIST =
+  NODE_ENV === 'production' ? PRODUCTION_WHITELIST : LOCAL_WHITELIST;
 
 const RATE_LIMITER = {
   windowMs: 15 * 60 * 1000, // 15 minutes
@@ -26,7 +27,7 @@ const LUSCA_OPTIONS = {
   // csrf: process.env.NODE_ENV === 'production' ? true : false,
   csp: {
     policy: {
-      'default-src': '\'self\'',
+      'default-src': "'self'",
       'img-src': '*'
     }
   },

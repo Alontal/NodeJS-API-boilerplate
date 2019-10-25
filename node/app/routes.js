@@ -1,11 +1,8 @@
 const path = require('path');
 const cors = require('cors'); // add cors
-const {
-  userSql, user, docs, email
-} = require('./components');
+const { userSql, user, docs, email } = require('./components');
 const { CORS_WHITE_LIST } = require('../config/config');
-require('./bootstrap');// init crons on boot
-
+require('./bootstrap'); // init crons on boot
 
 const corsOptions = {
   origin(origin, callback) {
@@ -16,8 +13,12 @@ const corsOptions = {
     }
   }
 };
-module.exports = (app) => {
-  app.use('/api/user', cors(corsOptions), process.env.DB_MODE === 'sql' ? userSql.userApi : user.userApi);
+module.exports = app => {
+  app.use(
+    '/api/user',
+    cors(corsOptions),
+    process.env.DB_MODE === 'sql' ? userSql.userApi : user.userApi
+  );
   // app.use('/api/email',  email.emailApi);
   // app.use('/api/docs',  docs.docsApi);
 

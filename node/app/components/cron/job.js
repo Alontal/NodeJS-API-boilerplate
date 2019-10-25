@@ -14,7 +14,6 @@ const logger = require('../../util');
 
 // e.g interval = '*/1 * * * * *'
 
-
 // var job = (startTime,endTime, interval = '* * */23 * * *' , fnc ) =>  schedule.scheduleJob({ start: startTime, end: endTime,  rule: interval }, function () {
 //     console.log('Time for tea!');
 // });
@@ -22,7 +21,7 @@ const logger = require('../../util');
 // let startTime = new Date(Date.now() + 5000);
 // let endTime = new Date(startTime.getTime() + 5000);
 // job(startTime, endTime);
-schedule.Job.prototype.nextDates = function (count = 1) {
+schedule.Job.prototype.nextDates = function(count = 1) {
   const dates = [];
 
   if (!this.pendingInvocations().length) {
@@ -52,7 +51,8 @@ schedule.Job.prototype.nextDates = function (count = 1) {
 let JOB_COUNTER = 0;
 const JOBS = {};
 
-const scheduleJob = (options, fnc) => schedule.scheduleJob(options.name, options, fnc);
+const scheduleJob = (options, fnc) =>
+  schedule.scheduleJob(options.name, options, fnc);
 
 class Job {
   constructor(name, startAt, endsAt, interval) {
@@ -64,20 +64,24 @@ class Job {
 
   do(fnc) {
     // let id = this.name.match(/(?<=_)(.*)(?=_)/)[0];
-    if (fnc[Symbol.toStringTag] !== 'AsyncFunction') return 'async func must be provided to do();';
+    if (fnc[Symbol.toStringTag] !== 'AsyncFunction')
+      return 'async func must be provided to do();';
     JOBS[this.name] = {
       // id: id,
       name: this.name,
-      job: scheduleJob({
-        name: this.name,
-        start: new Date(this.startAt),
-        end: new Date(this.endsAt),
-        rule: this.interval
-      }, () => {
-        fnc().then((res) => {
-          logger.info('job end, results :', res);
-        });
-      })
+      job: scheduleJob(
+        {
+          name: this.name,
+          start: new Date(this.startAt),
+          end: new Date(this.endsAt),
+          rule: this.interval
+        },
+        () => {
+          fnc().then(res => {
+            logger.info('job end, results :', res);
+          });
+        }
+      )
     };
     logger.info(`job ${this.name} created`, JOBS);
     JOB_COUNTER++;
@@ -88,7 +92,7 @@ class Job {
     const job = JOBS[name + id];
     logger.debug('schedule. :', schedule.scheduledJobs);
     const rescheduleJob = schedule.rescheduleJob(name + id, interval);
-    rescheduleJob.nextDates(5).forEach((x) => logger.debug(x));
+    rescheduleJob.nextDates(5).forEach(x => logger.debug(x));
     return { job, rescheduleJob };
   }
 
