@@ -52,19 +52,19 @@ module.exports = {
       }
     },
     responses: {
-      '200': {
+      200: {
         description: 'successful request',
         schema: {
           $ref: '#/definitions/200'
         }
       },
-      '403': {
+      403: {
         description: 'Authentication  Failed',
         schema: {
           $ref: '#/definitions/403'
         }
       },
-      '500': {
+      500: {
         description: 'Unexpected error',
         schema: {
           $ref: '#/definitions/500'

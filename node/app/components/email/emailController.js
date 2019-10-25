@@ -20,14 +20,14 @@ const MESSAGES = {
  * @param templateName - The template to use.
  * @param message: - See param below.
  * @param from - The email address of the sender. ‘sender@server.com’.
- * @param to - Comma separated list or an array of recipients email addresses that will appear on the To: field
- * @param cc - Comma separated list or an array of recipients email addresses that will appear on the Cc: field
- * @param bcc - Comma separated list or an array of recipients email addresses that will appear on the Bcc: field
- * @param {message} subject - The subject of the email
- * @param {message} text - The plaintext version of the message as an Unicode string, Buffer, Stream or an attachment-like object ({path: ‘/var/data/…’})
- * @param {message} html - The HTML version of the message as an Unicode string, Buffer, Stream or an attachment-like object ({path: ‘http://…‘})
+ * @param to - Comma separated list or an array of recipients email addresses that will appear on the To: field.
+ * @param cc - Comma separated list or an array of recipients email addresses that will appear on the Cc: field.
+ * @param bcc - Comma separated list or an array of recipients email addresses that will appear on the Bcc: field.
+ * @param subject - The subject of the email.
+ * @param text - The plaintext version of the message as an Unicode string, Buffer, Stream or an attachment-like object ({path: ‘/var/data/…’}).
+ * @param html - The HTML version of the message as an Unicode string, Buffer, Stream or an attachment-like object ({path: ‘http://…‘}).
  * @param message
- * @param {file} attachments - An array of attachment objects (see Using attachments for details). Attachments can be used for embedding images as well.
+ * @param attachments - An array of attachment objects (see Using attachments for details). Attachments can be used for embedding images as well.
  * @example function sendEmailExample() {
  * const message = {
  * from: process.env.APP_DOMAIN,
@@ -87,7 +87,7 @@ async function decideSender(email) {
     if (email.includes('@')) {
       // send email to all-users
       if (email === 'all-users') {
-        return (await User.getAllUsers()).map(u => u.email);
+        return (await User.getAllUsers()).map((u) => u.email);
       }
       // send email to admins in  system
       if (email === 'all-admins') {

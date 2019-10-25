@@ -62,16 +62,16 @@ module.exports = {
       }
     },
     responses: {
-      '200': {
+      200: {
         description: 'successful login',
         schema: {
           $ref: '#/definitions/LoginSuccess'
         }
       },
-      '403': {
+      403: {
         description: 'Authentication  Failed'
       },
-      '500': {
+      500: {
         description: 'Unexpected error'
       }
     }

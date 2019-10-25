@@ -1,4 +1,4 @@
-const logger = require("../util/logger");
+const logger = require('../util/logger');
 
 class baseModelSQL {
   constructor(model) {

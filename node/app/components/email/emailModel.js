@@ -30,10 +30,10 @@ const email = new Email({
   transport: transports.default
 });
 
-send = async (message, templateName, locals, transport_name = 'default') => {
+const send = async (message, templateName, locals, transportName = 'default') => {
   try {
-    if(transport_name) email.config.transport = transports[transport_name.toString()];
-    const dir = path.join(__dirname, '../', '../', '../','emails',templateName);
+    if (transportName) email.config.transport = transports[transportName.toString()];
+    const dir = path.join(__dirname, '../', '../', '../', 'emails', templateName);
     return await email.send({
       template: dir,
       message,

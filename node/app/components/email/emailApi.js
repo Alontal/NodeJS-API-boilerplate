@@ -1,10 +1,10 @@
 const express = require('express');
 
 const router = express.Router();
-const {auth, asyncMiddleware} = require('../../middleware');
+const { auth, asyncMiddleware } = require('../../middleware');
 const { logger } = require('../../util');
-const { emailController } = require('.'	);
-  
+const { emailController } = require('.');
+
 router.get(
   '/test',
   asyncMiddleware(async (req, res) => {
