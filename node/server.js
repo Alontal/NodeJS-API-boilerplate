@@ -17,7 +17,7 @@ const { logger } = require('./app/util');
 
 
 // eslint-disable-next-line no-undef
-const { PORT = 8080 } = process.env;
+const { PORT = 8080, SESSION_SECRET } = process.env;
 // set helmet for security
 app.use(helmet());
 // Parse req made to app
@@ -34,7 +34,7 @@ const apiLimiter = rateLimit({
 // create session for requests
 app.use(
   session({
-    secret: process.env.SESSION_SECRET,
+    secret: SESSION_SECRET,
     resave: true,
     saveUninitialized: true
   })
