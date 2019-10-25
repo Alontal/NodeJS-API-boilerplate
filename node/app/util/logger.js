@@ -54,7 +54,7 @@ const consoleTransport = new transports.Console({
     format.printf(
       (info) => `[${info.timestamp}] [${NODE_ENV}] [${SERVICE_NAME}] [${info.level}]: ${
         info.message
-      }${JSON.stringify((info.data || info.stack || info.error))}`
+      }${JSON.stringify((info.data || info.stack || info.error || ''))}`
     )
   )
 });
@@ -86,26 +86,26 @@ const logger = createLogger({
 if (process.env.NODE_ENV !== 'production') {
   logger.add(consoleTransport);
 } else {
-// prevent winston to stop if Error occurred
-  // logger.exitOnError = false;
+  // prevent winston to stop if Error occurred
+  logger.exitOnError = false;
 }
 
 // *****
 // Allows for JSON logging
 // *****
 
-logger.log({
-  level: 'info',
-  message: 'Pass an object and this works',
-  additional: 'properties',
-  are: 'passed along'
-});
+// logger.log({
+//   level: 'info',
+//   message: 'Pass an object and this works',
+//   additional: 'properties',
+//   are: 'passed along'
+// });
 
-logger.info({
-  message: 'Use a helper method if you want',
-  additional: 'properties',
-  are: 'passed along'
-});
+// logger.info({
+//   message: 'Use a helper method if you want',
+//   additional: 'properties',
+//   are: 'passed along'
+// });
 
 // // *****
 // // Allows for parameter-based logging
@@ -135,12 +135,12 @@ logger.info({
 //   logger.log('info', 'test message %s, %s', 'first', 'second', { number: 123 });
 
 // prints "Found error at %s"
-logger.info('Found %s at %s', 'error', new Date());
-logger.info('Found %s at %s', 'error', new Error('chill winston'));
-logger.info('Found %s at %s', 'error', /WUT/);
-logger.info('Found %s at %s', 'error', true);
-logger.info('Found %s at %s', 'error', 100.00);
-logger.info('Found %s at %s', 'error', ['1, 2, 3']);
+// logger.info('Found %s at %s', 'error', new Date());
+// logger.info('Found %s at %s', 'error', new Error('chill winston'));
+// logger.info('Found %s at %s', 'error', /WUT/);
+// logger.info('Found %s at %s', 'error', true);
+// logger.info('Found %s at %s', 'error', 100.00);
+// logger.info('Found %s at %s', 'error', ['1, 2, 3']);
 
 //   // *****
 //   // Allows for logging Error instances
