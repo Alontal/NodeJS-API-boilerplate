@@ -1,0 +1,89 @@
+{
+  "name": "node_server",
+  "version": "1.0.0",
+  "description": "Starter node server",
+  "main": "server.js",
+  "scripts": {
+    "echo": "cross-env-shell \"echo NODE_ENV = $NODE_ENV\"",
+    "start": "cross-env-shell NODE_ENV=debug \"npm run test && npm run echo && node server.js\"",
+    "pm2:start": "cross-env NODE_ENV=production pm2 start server.js",
+    "pm2:start-watch": "cross-env NODE_ENV=production pm2 start server.js --watch ",
+    "pm2:start-cluster": "cross-env NODE_ENV=production pm2 start server.js -i 2 --watch",
+    "test": "jest",
+    "test:lint": "cross-env-shell \"echo $NODE_ENV && eslint ./\"",
+    "lint": "eslint ./",
+    "lint:fix": "eslint . --fix",
+    "test:test": "echo \"Error: no specified\" && exit 1",
+    "docker:up": "docker-compose up",
+    "docker:build": "docker:up && --build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Alontal/NodeJS-api"
+  },
+  "author": "Alon Tal",
+  "license": "MIT",
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "cookie-parser": "^1.4.4",
+    "cors": "^2.8.5",
+    "dotenv": "^8.0.0",
+    "email-templates": "^5.1.0",
+    "express": "^4.17.1",
+    "express-rate-limit": "^5.0.0",
+    "express-session": "^1.16.2",
+    "helmet": "^3.18.0",
+    "jest": "^24.8.0",
+    "jsonwebtoken": "^8.5.1",
+    "lodash": "^4.17.11",
+    "lusca": "^1.6.1",
+    "mkdirp": "^0.5.1",
+    "moment": "^2.24.0",
+    "mongoose": "^5.6.0",
+    "node-schedule": "^1.3.2",
+    "nodemailer": "^6.2.1",
+    "path": "^0.12.7",
+    "promise-mysql": "^4.0.4",
+    "pug": "^2.0.4",
+    "request": "^2.88.0",
+    "sequelize": "^5.19.6",
+    "swagger-jsdoc": "^3.2.9",
+    "swagger-ui-express": "^4.0.6",
+    "uuid": "^3.3.2",
+    "validator": "^11.0.0",
+    "winston": "^3.2.1",
+    "winston-daily-rotate-file": "^3.9.0"
+  },
+  "lint-staged": {
+    "src/**/*.{js,jsx}": [
+      "npm run --silent lint:js:fix",
+      "git add"
+    ],
+    "src/**/*.scss": [
+      "npm run --silent lint:scss:fix",
+      "git add"
+    ]
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "devDependencies": {
+    "cross-env": "^5.2.0",
+    "eslint": "^6.5.1",
+    "eslint-config-airbnb-base": "^14.0.0",
+    "eslint-config-prettier": "^5.0.0",
+    "eslint-plugin-import": "^2.18.2",
+    "eslint-plugin-jsdoc": "^15.8.0",
+    "eslint-plugin-prettier": "^3.1.0",
+    "eslint-plugin-promise": "^4.2.1",
+    "eslint-plugin-security": "^1.4.0",
+    "husky": "^3.0.2",
+    "jshint": "^2.10.2",
+    "lint-staged": "^9.2.1",
+    "nodemon": "^1.19.1",
+    "prettier": "^1.18.2",
+    "sequelize-cli": "^5.5.1"
+  }
+}

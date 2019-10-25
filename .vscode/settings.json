@@ -1,0 +1,14 @@
+{
+  "editor.formatOnPaste": true,
+  "editor.formatOnSave": true,
+  "editor.formatOnType": true,
+  "eslint.autoFixOnSave": true,
+  "editor.tabSize": 2,
+  "jshint.nodePath": "./node",
+  "eslint.workingDirectories": [
+    {
+      "directory": "./node",
+      "changeProcessCWD": true
+    }
+  ]
+}
