@@ -94,13 +94,13 @@ class RestApi {
         try {
           let response;
           if (this.post.function) {
-            response = await this.post.function(data.data, data.options);
+            response = await this.post.function(data);
           } else {
-            response = await this.model.delete(data.data, data.options);
+            response = await this.model.insert(data);
           }
           return res.status(200).send(response);
         } catch (error) {
-          const response = responseHandler(`/delete ${this.name}`, false, error);
+          const response = responseHandler(`/post ${this.name}`, false, error);
           return res.status(500).send(response);
         }
       })

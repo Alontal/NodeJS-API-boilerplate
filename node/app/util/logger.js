@@ -14,7 +14,7 @@ const loggerConfig = {
 };
 const LOG_DIR = path.resolve(
   path.dirname(require.main.filename),
-  `../log/${SERVICE_NAME.toLowerCase()}`
+  `../LOG/${SERVICE_NAME.toLowerCase()}`
 );
 // const LOG_DIR = path.resolve(__dirname, '..', '..', 'LOG/');
 if (!fs.existsSync(LOG_DIR)) {
@@ -24,8 +24,7 @@ if (!fs.existsSync(LOG_DIR)) {
   });
 }
 
-const createLogFileName = level =>
-  `${LOG_DIR}/${SERVICE_NAME}-${level}.%DATE%.log`;
+const createLogFileName = level => `${LOG_DIR}/${SERVICE_NAME}-${level}.%DATE%.log`;
 
 // eslint-disable-next-line no-console
 console.info('Logs will write to Directory >> ', LOG_DIR);
