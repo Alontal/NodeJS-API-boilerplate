@@ -1,15 +1,15 @@
-const express = require('express');
+const express = require("express");
 
-const { asyncMiddleware } = require('../middleware');
-const { responseHandler } = require('../util');
-const { BaseModel } = require('.');
+const { asyncMiddleware } = require("../middleware");
+const { responseHandler } = require("../util");
+const { baseModelSQL } = require(".");
 
 class RestApi {
   constructor(
     name,
-    model = new BaseModel(),
+    model = new baseModelSQL(),
     options = {
-      baseRoute: '',
+      baseRoute: "",
       get: {
         function: null,
         middleware: []
@@ -31,7 +31,7 @@ class RestApi {
     this.name = name;
     this.model = model;
     this.router = express.Router();
-    this.baseRoute = options.baseRoute || '/';
+    this.baseRoute = options.baseRoute || "/";
     if (options.get) this.get = options.get;
     if (options.post) this.post = options.post;
     if (options.put) this.put = options.put;
@@ -40,7 +40,11 @@ class RestApi {
   }
 
   // ADD new custom route
-  registerRoute(route, routeFunction, options = { middleware: [], message: '', type: 'get' }) {
+  registerRoute(
+    route,
+    routeFunction,
+    options = { middleware: [], message: "", type: "get" }
+  ) {
     this.router[options.type.toString().toLowerCase()](
       this.baseRoute.toString(),
       options.middleware,
@@ -49,11 +53,13 @@ class RestApi {
         const { data } = body;
         try {
           const apiResponse = await routeFunction(data || query || params);
-          return res.status(200).send(
-            apiResponse
-          );
+          return res.status(200).send(apiResponse);
         } catch (error) {
-          const apiResponse = responseHandler(`${options.type} ${route} ${this.name}`, false, { error });
+          const apiResponse = responseHandler(
+            `${options.type} ${route} ${this.name}`,
+            false,
+            { error }
+          );
           return res.status(500).send(apiResponse.message);
         }
       })
@@ -71,7 +77,7 @@ class RestApi {
         const { limit, order, options } = req.body; // TODO add limit && order to query
         try {
           const getQuery = query || (options && options.where);
-          if (!getQuery) res.status(500).send('missing query || where');
+          if (!getQuery) res.status(500).send("missing query || where");
           let response;
           if (this.get.function) {
             response = await this.get.function(getQuery);
@@ -100,7 +106,11 @@ class RestApi {
           }
           return res.status(200).send(response);
         } catch (error) {
-          const response = responseHandler(`/delete ${this.name}`, false, error);
+          const response = responseHandler(
+            `/delete ${this.name}`,
+            false,
+            error
+          );
           return res.status(500).send(response);
         }
       })
@@ -140,7 +150,11 @@ class RestApi {
           }
           return res.status(200).send(response);
         } catch (error) {
-          const response = responseHandler(`/delete ${this.name}`, false, error);
+          const response = responseHandler(
+            `/delete ${this.name}`,
+            false,
+            error
+          );
           return res.status(500).send(response);
         }
       })

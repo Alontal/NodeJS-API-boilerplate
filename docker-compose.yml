@@ -1,34 +1,34 @@
 version: "3"
 
 services:
-  nginx:
-    build:
-      context: ./nginx
-    tty: true
-    links:
-      - node:node
-    ports:
-      - "80:80"
-    networks:
-      - app-network
+  # nginx:
+  #   build:
+  #     context: ./nginx
+  #   tty: true
+  #   links:
+  #     - node:node
+  #   ports:
+  #     - "80:80"
+  #   networks:
+  #     - app-network
 
-  node:
-    build:
-      context: ./node
-    networks:
-      - app-network
-    env_file:
-      - ./.env
-    volumes:
-      - logs:/log/
+  # node:
+  #   build:
+  #     context: ./node
+  #   networks:
+  #     - app-network
+  #   env_file:
+  #     - ./.env
+  #   volumes:
+  #     - logs:/log/
 
   potgreSQL:
     restart: always
     image: sameersbn/postgresql:10-2
     env_file:
-      - ./.env
-    networks:
-      - app-network
+      - ./node/.env
+    # networks:
+    #   - app-network
     ports:
       - "${PG_SQL_PORT}:${PG_SQL_PORT}"
     volumes:

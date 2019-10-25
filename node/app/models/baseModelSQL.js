@@ -1,6 +1,6 @@
-const logger = require('../util/logger');
+const logger = require("../util/logger");
 
-class BaseModel {
+class baseModelSQL {
   constructor(model) {
     this.model = model;
   }
@@ -57,4 +57,4 @@ class BaseModel {
   }
 }
 
-module.exports = BaseModel;
+module.exports = baseModelSQL;
