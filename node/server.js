@@ -62,6 +62,4 @@ require('./app/util/errorHandler');
 require('./app/bootstrap');
 
 // start our server on port set in .env file
-app.listen(PORT, () =>
-  logger.info(`Server started running... on port: ${PORT}`)
-);
+app.listen(PORT, () => logger.info(`Server started running... on port: ${PORT}`));
