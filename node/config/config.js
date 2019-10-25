@@ -15,12 +15,16 @@ const DATE_FORMATS = {
   SHORT_DATE: 'DD MM YYYY, HH:mm:ss'
 };
 
-const CORS_WHITE_LIST =
-  NODE_ENV === 'production' ? PRODUCTION_WHITELIST : LOCAL_WHITELIST;
+const CORS_WHITE_LIST = NODE_ENV === 'production' ? PRODUCTION_WHITELIST : LOCAL_WHITELIST;
+
+const MINUTE = 60 * 1000;
+const HOUR = MINUTE * 60;
+const DAY = HOUR * 24;
+const WEEK = DAY * 7;
 
 const RATE_LIMITER = {
-  windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 20
+  windowMs: 1 * MINUTE, // 15 minutes
+  max: 100
 };
 
 const LUSCA_OPTIONS = {
@@ -43,7 +47,7 @@ const APP_SESSION = {
   resave: true,
   saveUninitialized: true,
   cookie: {
-    maxAge: 30 * 24 * 60 * 60 * 1000 // 1 month
+    maxAge: WEEK // 1 week
   }
   // proxy: true // if you do ssl outside node
 };

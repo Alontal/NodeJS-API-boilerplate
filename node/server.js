@@ -8,15 +8,16 @@ const lusca = require('lusca');
 const rateLimit = require('express-rate-limit');
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
-const { LUSCA_OPTIONS } = require('./config/config');
+const { LUSCA_OPTIONS, APP_SESSION, RATE_LIMITER } = require('./config/config');
 // show nice console text
-// const text = require('./loadingCliText');
+const text = require('./loadingCliText');
+
+// eslint-disable-next-line no-console
+console.log(text);
 const { logger } = require('./app/util');
 
-// logger.write(text);
-
 // eslint-disable-next-line no-undef
-const { PORT, SESSION_SECRET } = process.env;
+const { PORT } = process.env;
 // set helmet for security
 app.use(helmet());
 // Parse req made to app
@@ -25,19 +26,10 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
 
 app.enable('trust proxy'); // only if you're behind a reverse proxy (Heroku, Bluemix, AWS ELB, Nginx, etc)
-const apiLimiter = rateLimit({
-  windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 100
-});
+const apiLimiter = rateLimit(RATE_LIMITER);
 
 // create session for requests
-app.use(
-  session({
-    secret: SESSION_SECRET,
-    resave: true,
-    saveUninitialized: true
-  })
-);
+app.use(session(APP_SESSION));
 
 // add lusca to protect header
 app.use(lusca(LUSCA_OPTIONS));
@@ -62,6 +54,4 @@ require('./app/util/errorHandler');
 require('./app/bootstrap');
 
 // start our server on port set in .env file
-app.listen(PORT, () =>
-  logger.info(`Server started running... on port: ${PORT}`)
-);
+app.listen(PORT, () => logger.info(`Server started running... on port: ${PORT}`));
