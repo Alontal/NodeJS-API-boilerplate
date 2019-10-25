@@ -24,7 +24,7 @@
       "program": "${workspaceFolder}/node/server.js",
       "restart": true,
       "env": {
-        "NODE_ENV": "debug"
+        "NODE_ENV": "local"
       },
       "console": "integratedTerminal",
       "internalConsoleOptions": "neverOpen"
@@ -35,7 +35,7 @@
       "name": "node",
       "program": "${workspaceFolder}/node/server.js",
       "env": {
-        "NODE_ENV": "debug"
+        "NODE_ENV": "local"
       },
       "console": "integratedTerminal"
     }

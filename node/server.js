@@ -1,5 +1,5 @@
 const express = require('express');
-require('dotenv').config();
+// require('dotenv').config();
 
 const app = express();
 const helmet = require('helmet');
@@ -10,10 +10,10 @@ const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 const { LUSCA_OPTIONS } = require('./config/config');
 // show nice console text
-const text = require('./loadingCliText');
+// const text = require('./loadingCliText');
 const { logger } = require('./app/util');
 
-logger.write(text);
+// logger.write(text);
 
 
 // eslint-disable-next-line no-undef
