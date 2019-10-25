@@ -13,7 +13,7 @@ module.exports = {
     sourceType: 'module'
   },
   extends: ['eslint:recommended', 'airbnb-base', 'plugin:security/recommended', 'plugin:prettier/recommended'],
-  plugins: ['promise', 'jsdoc', 'security', 'import'],
+  plugins: ['promise', 'jsdoc', 'security', 'import', 'prettier'],
   rules: {
     'prettier/prettier': ['error', { singleQuote: true, parser: 'flow' }],
     indent: ['error'],

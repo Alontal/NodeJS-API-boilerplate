@@ -4,7 +4,6 @@
   "editor.formatOnType": true,
   "eslint.autoFixOnSave": true,
   "editor.tabSize": 2,
-  "prettier.eslintIntegration": true,
   "jshint.nodePath": "./node",
   "eslint.workingDirectories": [
     {
