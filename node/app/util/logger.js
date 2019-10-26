@@ -38,12 +38,17 @@ const FORMATS = {
   }),
   colorize: format.colorize({ all: true }),
   printf: format.printf(info => {
-    const payload = JSON.stringify(omit(info, ['message', 'level', 'timestamp', 'label']));
+    // get all props except some that always need to be same order
+    let payload = JSON.stringify(omit(info, ['message', 'level', 'timestamp', 'label']));
+    payload = payload === '{}' ? '' : payload;
+    // get splat message
+    const splat = JSON.stringify(info[Object.getOwnPropertySymbols(info)[1]]) || '';
+    // return log in format of : [ts] [env] [service_name] [level] [...]
     return `[${chalk.blue(info.timestamp)}] [${chalk.magentaBright(
       NODE_ENV
-    )}] [${chalk.magentaBright(SERVICE_NAME)}] [${info.level}] [${info.message}] ${
-      payload === '{}' ? '' : [chalk.bgBlackBright(payload)]
-    }`;
+    )}] [${chalk.magentaBright(SERVICE_NAME)}] [${info.level}] [${
+      info.message
+    }] [${chalk.bgBlackBright(payload)}] [${chalk.bgBlackBright(splat)}]`;
   })
 };
 
@@ -54,8 +59,7 @@ const defaultTransport = new transports.DailyRotateFile({
   maxSize: WINSTON_CONFIG.maxSize,
   maxFiles: WINSTON_CONFIG.maxFiles,
   json: format.json(),
-  format: format.logstash(),
-  splat: format.splat()
+  format: format.logstash()
 });
 const exceptionsTransport = new transports.DailyRotateFile({
   filename: createLogFileName('exceptions'),
@@ -72,6 +76,7 @@ const consoleTransport = new transports.Console({
 const logger = createLogger({
   level: 'info',
   format: format.combine(FORMATS.label, FORMATS.timestamp, format.errors({ stack: true })),
+  splat: format.splat(),
   // defaultMeta: {
   //   // some meta data...
   // },
