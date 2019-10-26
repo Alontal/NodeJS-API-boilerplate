@@ -1,7 +1,3 @@
-#/config 
-
-server.log
-
 # compiled output
 /tmp
 
@@ -11,20 +7,6 @@ node_modules
 /package-*
 package-lock.json
 
-
-# misc
-/.sass-cache
-/connect.lock
-/coverage
-/libpeerconnection.log
-npm-debug.log
-testem.log
-/typings
-/docs
-
-# e2e
-/e2e/*.js
-/e2e/*.map
 
 # System Files
 .DS_Store
