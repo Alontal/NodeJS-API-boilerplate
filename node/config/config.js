@@ -22,6 +22,12 @@ const HOUR = MINUTE * 60;
 const DAY = HOUR * 24;
 const WEEK = DAY * 7;
 
+const WINSTON_CONFIG = {
+  maxSize: '30m',
+  maxFiles: '3d',
+  zippedArchive: false
+};
+
 const RATE_LIMITER = {
   windowMs: 1 * MINUTE, // 15 minutes
   max: 100
@@ -57,5 +63,6 @@ module.exports = {
   LUSCA_OPTIONS,
   DATE_FORMATS,
   RATE_LIMITER,
-  APP_SESSION
+  APP_SESSION,
+  WINSTON_CONFIG
 };

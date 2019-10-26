@@ -11,8 +11,8 @@ const bodyParser = require('body-parser');
 const { LUSCA_OPTIONS, APP_SESSION, RATE_LIMITER } = require('./config/config');
 // show nice console text
 const text = require('./loadingCliText');
-
-// eslint-disable-next-line no-console
+/* eslint-disable no-console */
+console.clear();
 console.log(text);
 const { logger } = require('./app/util');
 
