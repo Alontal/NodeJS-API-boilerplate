@@ -4,6 +4,8 @@ const path = require('path');
 const fs = require('fs');
 const mkdirp = require('mkdirp');
 const { omit } = require('lodash');
+const chalk = require('chalk');
+
 require('winston-daily-rotate-file');
 
 const { NODE_ENV, SERVICE_NAME = 'SERVICE_NAME' } = process.env;
@@ -37,27 +39,28 @@ const FORMATS = {
   colorize: format.colorize({ all: true }),
   printf: format.printf(info => {
     const payload = JSON.stringify(omit(info, ['message', 'level', 'timestamp', 'label']));
-    return `[${info.timestamp}] [${NODE_ENV}] [${SERVICE_NAME}] [${info.level}] [${info.message}] ${
-      payload === '{}' ? '' : [payload]
-    }`;
+    return `[${chalk.red(info.timestamp)}] [${chalk.blue(NODE_ENV)}] [${chalk.blue(
+      SERVICE_NAME
+    )}] [${info.level}] [${info.message}] ${payload === '{}' ? '' : [chalk.inverse(payload)]}`;
   })
 };
 
 // TRANSPORTS
 const defaultTransport = new transports.DailyRotateFile({
   filename: createLogFileName('info'),
-  datePattern: dateFormats.SHORT_DATETIME,
   zippedArchive: WINSTON_CONFIG.zippedArchive,
   maxSize: WINSTON_CONFIG.maxSize,
-  maxFiles: WINSTON_CONFIG.maxFiles
+  maxFiles: WINSTON_CONFIG.maxFiles,
+  // json: format.json(),
+  format: format.logstash()
 });
 const exceptionsTransport = new transports.DailyRotateFile({
   filename: createLogFileName('exceptions'),
-  datePattern: dateFormats.SHORT_DATETIME,
   zippedArchive: WINSTON_CONFIG.zippedArchive,
   maxSize: WINSTON_CONFIG.maxSize,
   maxFiles: WINSTON_CONFIG.maxFiles
 });
+
 const consoleTransport = new transports.Console({
   level: 'debug',
   format: format.combine(FORMATS.timestamp, FORMATS.colorize, FORMATS.printf)
@@ -71,9 +74,9 @@ const logger = createLogger({
     format.errors({ stack: true }),
     format.splat()
   ),
-  defaultMeta: {
-    // some meta data...
-  },
+  // defaultMeta: {
+  //   // some meta data...
+  // },
   transports: [defaultTransport],
   exceptionHandlers: [exceptionsTransport] // catch exceptions
 });
@@ -112,15 +115,16 @@ if (process.env.NODE_ENV !== 'production') {
 //   additional: 'properties',
 //   are: 'passed along'
 // });
+
 // const data = {
 //   additional: 'properties',
 //   are: 'passed along'
 // };
 // logger.info('Use a helper method if you want', data);
 
-// *****
-// Allows for string interpolation
-// *****
+// // *****
+// // Allows for string interpolation
+// // *****
 
 // // info: test message my string {}
 // logger.log('info', 'test message %s', 'my string');
@@ -139,9 +143,9 @@ if (process.env.NODE_ENV !== 'production') {
 // logger.info('Found %s at %s', 'error', 100.0);
 // logger.info('Found %s at %s', 'error', ['1, 2, 3']);
 
-// // *****
-// // Allows for logging Error instances
-// // *****
+// *****
+// Allows for logging Error instances
+// *****
 
 // logger.warn(new Error('Error passed as info'));
 // logger.log('error', new Error('Error passed as message'));
@@ -150,5 +154,46 @@ if (process.env.NODE_ENV !== 'production') {
 // logger.log('error', 'Important error: ', new Error('Error passed as meta'));
 
 // logger.error(new Error('Error as info'));
+
+// const log = logger.info;
+// // Combine styled and normal strings
+// log(`${chalk.blue('Hello')} World${chalk.red('!')}`);
+
+// // Compose multiple styles using the chainable API
+// log(chalk.blue.bgRed.bold('Hello world!'));
+
+// // Pass in multiple arguments
+// log(chalk.blue('Hello', 'World!', 'Foo', 'bar', 'biz', 'baz'));
+
+// // Nest styles
+// log(chalk.red('Hello', `${chalk.underline.bgBlue('world')}!`));
+
+// // Nest styles of the same type even (color, underline, background)
+// log(
+//   chalk.green(
+//     `I am a green line ${chalk.blue.underline.bold(
+//       'with a blue substring'
+//     )} that becomes green again!`
+//   )
+// );
+
+// // ES2015 template literal
+// log(`
+// CPU: ${chalk.red('90%')}
+// RAM: ${chalk.green('40%')}
+// DISK: ${chalk.yellow('70%')}
+// // `);
+
+// // // // ES2015 tagged template literal
+// // // log(chalk`
+// // // CPU: {red ${cpu.totalPercent}%}
+// // // RAM: {green ${(ram.used / ram.total) * 100}%}
+// // // DISK: {rgb(255,131,0) ${(disk.used / disk.total) * 100}%}
+// // // `);
+
+// // Use RGB colors in terminal emulators that support it.
+// log(chalk.keyword('orange')('Yay for orange colored text!'));
+// log(chalk.rgb(123, 45, 67).underline('Underlined reddish color'));
+// log(chalk.hex('#DEADED').bold('Bold gray!'));
 
 module.exports = logger;
