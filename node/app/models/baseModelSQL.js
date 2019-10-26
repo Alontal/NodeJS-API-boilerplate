@@ -1,58 +1,70 @@
-const logger = require('../util/logger');
+const { responseHandler } = require('../util');
 
 class baseModelSQL {
   constructor(model) {
     this.model = model;
   }
 
-  async insert(data) {
+  async insert(data, options) {
     try {
-      const created = await this.model.create(data);
-      if (created.err) throw created.err;
-      return created;
+      const created = await this.model.create(data, options);
+      if (created.err) throw created;
+      return responseHandler('insert', true, { data: created });
     } catch (error) {
-      logger.error(`BaseSql class, function: insert ,error: ${error}`);
-      return false;
+      return responseHandler('insert', false, { error });
     }
   }
 
-  async getOne(query) {
+  async getOne(query, options) {
     try {
-      const doc = await this.model.findOne({ where: { query } });
-      return doc;
+      const item = await this.model.findOne(query, options);
+      return responseHandler('getOne', true, { data: item });
     } catch (error) {
-      logger.error(`BaseSql class, function: getOne ,error: ${error}`);
-      return false;
+      return responseHandler('getOne', false, { error });
     }
   }
 
-  async getMany(query = {}) {
+  async getMany(query, options) {
     try {
-      const docs = await this.model.findAll({ where: query });
-      return docs;
+      const docs = await this.model.findAll(query || {}, options);
+      return responseHandler('getMany', true, { data: docs });
     } catch (error) {
-      logger.error(`BaseSql class, function: getMany ,error: ${error}`);
-      return false;
+      return responseHandler('getMany', false, { error });
     }
   }
 
   async update(newData, options) {
     try {
-      await this.model.update(newData, options);
-      return true;
+      const updated = await this.model.update(newData, options);
+      return responseHandler('update', true, { data: updated });
     } catch (error) {
-      logger.error(`BaseSql class, function: update ,error: ${error}`);
-      return false;
+      return responseHandler('update', false, { error });
     }
   }
 
   async delete(where) {
     try {
-      await this.model.destroy(where);
-      return true;
+      const deleted = await this.model.destroy(where);
+      return responseHandler('delete', true, { data: deleted });
     } catch (error) {
-      logger.error(`BaseSql class, function: delete ,error: ${error}`);
-      return false;
+      return responseHandler('delete', false, { error });
+    }
+  }
+
+  async createOrUpdate(newItem, where, association) {
+    try {
+      const foundItem = await this.model.findOne({ where });
+      if (!foundItem) {
+        let item;
+        if (association) {
+          item = await this.model.create(newItem, association);
+        } else item = await this.model.create(newItem);
+        return responseHandler('inserted', true, { data: { item, created: true } });
+      }
+      const updated = await this.model.update(newItem, { where });
+      return responseHandler('createOrUpdate', true, { data: { updated, item: foundItem } });
+    } catch (error) {
+      return responseHandler('createOrUpdate', false, { error });
     }
   }
 }

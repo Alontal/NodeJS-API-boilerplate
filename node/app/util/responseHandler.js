@@ -7,13 +7,14 @@ const handleResponse = (
 ) => {
   const MSG = {
     SUCCESS: `${operation} finished Successfully`,
-    FINISHED: `${operation} finished`
+    FINISHED: `${operation} finished`,
+    FINISHED_WITH_ERRORS: `${operation} finished with errors`
   };
   let response;
   if (error) {
     response = {
       status: false,
-      message: `${operation} failed with errors` || overrideMessage,
+      message: MSG.FINISHED_WITH_ERRORS || overrideMessage,
       error
     };
   } else {
@@ -24,9 +25,9 @@ const handleResponse = (
     };
   }
   // log the operation
-  const log = logLevel || (!status ? 'warn' : logLevel);
+  const level = logLevel || (!status ? 'warn' : logLevel);
   const logData = error ? { error, status } : { data, status };
-  logger[log.toString()](response.message, logData);
+  logger[level.toString()](response.message, logData);
   return response;
 };
 
