@@ -91,32 +91,32 @@ if (process.env.NODE_ENV !== 'production') {
 // Allows for JSON logging
 // *****
 
-logger.log({
-  level: 'info',
-  message: 'Pass an object and this works',
-  additional: 'properties',
-  are: 'passed along'
-});
+// logger.log({
+//   level: 'info',
+//   message: 'Pass an object and this works',
+//   additional: 'properties',
+//   are: 'passed along'
+// });
 
-logger.info({
-  message: 'Use a helper method if you want',
-  additional: 'properties',
-  are: 'passed along'
-});
+// logger.info({
+//   message: 'Use a helper method if you want',
+//   additional: 'properties',
+//   are: 'passed along'
+// });
 
-// *****
-// Allows for parameter-based logging
-// *****
+// // *****
+// // Allows for parameter-based logging
+// // *****
 
-logger.log('info', 'Pass a message and this works', {
-  additional: 'properties',
-  are: 'passed along'
-});
-const data = {
-  additional: 'properties',
-  are: 'passed along'
-};
-logger.info('Use a helper method if you want', data);
+// logger.log('info', 'Pass a message and this works', {
+//   additional: 'properties',
+//   are: 'passed along'
+// });
+// const data = {
+//   additional: 'properties',
+//   are: 'passed along'
+// };
+// logger.info('Use a helper method if you want', data);
 
 // *****
 // Allows for string interpolation
