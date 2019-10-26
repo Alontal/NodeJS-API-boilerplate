@@ -23,7 +23,7 @@
       "runtimeExecutable": "nodemon",
       "program": "${workspaceFolder}/node/server.js",
       "restart": true,
-      "envFile": "${workspaceFolder}/.env",
+      // "envFile": "${workspaceFolder}/.env",
       "console": "integratedTerminal",
       "internalConsoleOptions": "neverOpen"
     },

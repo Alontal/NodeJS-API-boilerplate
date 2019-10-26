@@ -96,7 +96,7 @@ if (process.env.NODE_ENV !== 'production') {
 // *****
 // Allows for JSON logging
 // *****
-if (TEST_LOGS) {
+if (TEST_LOGS && TEST_LOGS === 'true') {
   logger.log({
     level: 'info',
     message: 'Pass an object and this works',
