@@ -8,7 +8,7 @@ const chalk = require('chalk');
 
 require('winston-daily-rotate-file');
 
-const { NODE_ENV, SERVICE_NAME = 'SERVICE_NAME' } = process.env;
+const { NODE_ENV, SERVICE_NAME = 'SERVICE_NAME', TEST_LOGS = false } = process.env;
 const { dateFormats } = require('.');
 const { WINSTON_CONFIG } = require('../../config/config');
 
@@ -39,9 +39,11 @@ const FORMATS = {
   colorize: format.colorize({ all: true }),
   printf: format.printf(info => {
     const payload = JSON.stringify(omit(info, ['message', 'level', 'timestamp', 'label']));
-    return `[${chalk.red(info.timestamp)}] [${chalk.blue(NODE_ENV)}] [${chalk.blue(
-      SERVICE_NAME
-    )}] [${info.level}] [${info.message}] ${payload === '{}' ? '' : [chalk.inverse(payload)]}`;
+    return `[${chalk.blue(info.timestamp)}] [${chalk.magentaBright(
+      NODE_ENV
+    )}] [${chalk.magentaBright(SERVICE_NAME)}] [${info.level}] [${info.message}] ${
+      payload === '{}' ? '' : [chalk.bgBlackBright(payload)]
+    }`;
   })
 };
 
@@ -51,8 +53,9 @@ const defaultTransport = new transports.DailyRotateFile({
   zippedArchive: WINSTON_CONFIG.zippedArchive,
   maxSize: WINSTON_CONFIG.maxSize,
   maxFiles: WINSTON_CONFIG.maxFiles,
-  // json: format.json(),
-  format: format.logstash()
+  json: format.json(),
+  format: format.logstash(),
+  splat: format.splat()
 });
 const exceptionsTransport = new transports.DailyRotateFile({
   filename: createLogFileName('exceptions'),
@@ -68,12 +71,7 @@ const consoleTransport = new transports.Console({
 
 const logger = createLogger({
   level: 'info',
-  format: format.combine(
-    FORMATS.label,
-    FORMATS.timestamp,
-    format.errors({ stack: true }),
-    format.splat()
-  ),
+  format: format.combine(FORMATS.label, FORMATS.timestamp, format.errors({ stack: true })),
   // defaultMeta: {
   //   // some meta data...
   // },
@@ -93,67 +91,57 @@ if (process.env.NODE_ENV !== 'production') {
 // *****
 // Allows for JSON logging
 // *****
+if (TEST_LOGS) {
+  logger.log({
+    level: 'info',
+    message: 'Pass an object and this works',
+    additional: 'properties',
+    are: 'passed along'
+  });
 
-// logger.log({
-//   level: 'info',
-//   message: 'Pass an object and this works',
-//   additional: 'properties',
-//   are: 'passed along'
-// });
+  logger.info({
+    message: 'Use a helper method if you want',
+    additional: 'properties',
+    are: 'passed along'
+  });
 
-// logger.info({
-//   message: 'Use a helper method if you want',
-//   additional: 'properties',
-//   are: 'passed along'
-// });
+  // *****
+  // Allows for parameter-based logging
+  // *****
 
-// // *****
-// // Allows for parameter-based logging
-// // *****
+  logger.log('info', 'Pass a message and this works', {
+    additional: 'properties',
+    are: 'passed along'
+  });
 
-// logger.log('info', 'Pass a message and this works', {
-//   additional: 'properties',
-//   are: 'passed along'
-// });
+  const data = {
+    additional: 'properties',
+    are: 'passed along'
+  };
+  logger.info('Use a helper method if you want', data);
 
-// const data = {
-//   additional: 'properties',
-//   are: 'passed along'
-// };
-// logger.info('Use a helper method if you want', data);
-
-// // *****
-// // Allows for string interpolation
-// // *****
-
-// // info: test message my string {}
-// logger.log('info', 'test message %s', 'my string');
-
-// // info: test message my 123 {}
-// logger.log('info', 'test message %d', 123);
-
-// // info: test message first second {number: 123}
-// logger.log('info', 'test message %s, %s', 'first', 'second', { number: 123 });
-
-// // prints "Found error at %s"
-// logger.info('Found %s at %s', 'error', new Date());
-// logger.info('Found %s at %s', 'error', new Error('chill winston'));
-// logger.info('Found %s at %s', 'error', /WUT/);
-// logger.info('Found %s at %s', 'error', true);
-// logger.info('Found %s at %s', 'error', 100.0);
-// logger.info('Found %s at %s', 'error', ['1, 2, 3']);
-
-// *****
-// Allows for logging Error instances
-// *****
-
-// logger.warn(new Error('Error passed as info'));
-// logger.log('error', new Error('Error passed as message'));
-
-// logger.warn('Maybe important error: ', new Error('Error passed as meta'));
-// logger.log('error', 'Important error: ', new Error('Error passed as meta'));
-
-// logger.error(new Error('Error as info'));
+  // *****
+  // Allows for string interpolation
+  // *****
+  // info: test message my string {}
+  logger.log('info', 'test message %s', 'my string');
+  // info: test message my 123 {}
+  logger.log('info', 'test message %d', 123);
+  // info: test message first second {number: 123}
+  logger.log('info', 'test message %s, %s', 'first', 'second', { number: 123 });
+  // prints "Found error at %s"
+  logger.info('Found %s at %s', 'error', new Date());
+  logger.info('Found %s at %s', 'error', new Error('chill winston'));
+  logger.info('Found %s at %s', 'error', /WUT/);
+  logger.info('Found %s at %s', 'error', true);
+  logger.info('Found %s at %s', 'error', 100.0);
+  logger.info('Found %s at %s', 'error', ['1, 2, 3']);
+  logger.warn(new Error('Error passed as info'));
+  logger.log('error', new Error('Error passed as message'));
+  logger.warn('Maybe important error: ', new Error('Error passed as meta'));
+  logger.log('error', 'Important error: ', new Error('Error passed as meta'));
+  logger.error(new Error('Error as info'));
+}
 
 // const log = logger.info;
 // // Combine styled and normal strings
