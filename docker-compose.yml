@@ -24,6 +24,27 @@ services:
     volumes:
       - logs:/log/
 
+  filebeat:
+    image: filebeat
+    build:
+      context: ./filebeat
+    tty: true
+    volumes:
+      - logs:/log/
+    env_file:
+      - ./.env
+
+  metricbeat:
+    build: ./metricbeat
+    container_name: metricbeat-metricbeat-services
+    command: -e
+    env_file:
+      - ./.env
+    depends_on:
+      - elasticsearch
+    networks:
+      - metricbeat
+
   potgreSQL:
     restart: always
     image: sameersbn/postgresql:10-2
@@ -70,6 +91,9 @@ services:
 volumes:
   logs:
 networks:
+  metricbeat:
+    external:
+      name: metricbeat
   app-network:
     driver: bridge
 ###### To run docker-compose.dev.yml is development run the cmd:

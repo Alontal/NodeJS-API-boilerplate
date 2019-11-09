@@ -1,0 +1,89 @@
+metricbeat.modules:
+  #------------------------------- RabbitMQ Module -------------------------------
+  # - module: rabbitmq
+  #   enabled: true
+  #   metricsets: ["node"]
+  #   period: 5s
+  #   hosts: ["rabbitmq:15672"]
+  #   username: guest
+  #   password: guest
+
+  # #------------------------------- MySQL Module -------------------------------
+  # - module: mysql
+  #   enabled: true
+  #   metricsets: ["status"]
+  #   period: 5s
+  #   hosts: ["tcp(mysql:3306)/"]
+  #   username: root
+  #   password: root
+
+  # #------------------------------- MongoDB Module -------------------------------
+
+  # - module: mongodb
+  #   enabled: true
+  #   metricsets: ["status", "dbstats"]
+  #   period: 5s
+  #   hosts: ["mongodb:27017"]
+
+  # #------------------------------- MongoDB Module -------------------------------
+  # - module: apache
+  #   enabled: true
+  #   metricsets: ["status"]
+  #   period: 5s
+  #   hosts: ["http://apache"]
+
+  # #------------------------------- Redis Module -------------------------------
+  # - module: redis
+  #   enabled: true
+  #   metricsets: ["info", "keyspace"]
+  #   period: 5s
+  #   hosts: ["redis:6379"]
+
+  #------------------------------- Beats Module -------------------------------
+  - module: beat
+    metricsets:
+      - stats
+      - state
+    period: 10s
+    hosts: ["http://${ES_HOST_ELASTICSEARCH}:${BEATS_PORT}"]
+    #username: "user"
+    #password: "secret"
+    xpack.enabled: true
+  #------------------------------- Nginx Module -------------------------------
+  - module: nginx
+    enabled: true
+    metricsets: ["stubstatus"]
+    period: 5s
+    hosts: ["http://nginx"]
+    server_status_path: "nginx_status"
+
+  #------------------------------- Postgresql Module -------------------------------
+
+  - module: postgresql
+    metricsets: ["status"]
+    hosts: ["postgres://${PG_SQL_HOST}:${PG_SQL_PORT}"]
+    username: ${DB_PASS}
+    password: ${DB_PASS}
+#-------------------------- Elasticsearch output ------------------------------
+output.elasticsearch:
+  username: ${ES_HOST_USER}
+  password: ${ES_HOST_PASSWORD}
+  hosts: ["${ES_HOST_ELASTICSEARCH}:${ES_HOST_ELASTICSEARCH_PORT}"]
+
+setup.kibana:
+  host: "${KIBANA_HOST}:${KIBANA_HOST_PORT}"
+
+#============================== Dashboards =====================================
+# These settings control loading the sample dashboards to the Kibana index. Loading
+# the dashboards is disabled by default and can be enabled either by setting the
+# options here, or by using the `-setup` CLI flag.
+setup.dashboards.enabled: true
+
+logging.level: warning
+logging.to_files: true
+logging.to_syslog: false
+logging.files:
+  path: /var/log/metricbeat
+  name: metricbeat.log
+  keepfiles: 2
+  permissions: 0644
