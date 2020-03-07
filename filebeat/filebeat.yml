@@ -1,0 +1,69 @@
+filebeat.modules:
+  - module: nginx
+    access:
+      var.paths: ["/log/nginx/access.log"]
+    error:
+      var.paths: ["/log/nginx/error.log"]
+
+filebeat.inputs:
+  - type: log
+    enabled: true
+    paths:
+      - /log/nodes/*/*.log
+      - /log/nodes/*/*.log.*
+    json.keys_under_root: true
+    json.add_error_key: true
+    json.message_key: message
+  # - type: log
+  #   paths:
+  #     - "/var/log/metricbeat/*"
+  #   fields:
+  #     metricbeat: true
+  #   fields_under_root: true
+
+filebeat.autodiscover:
+  providers:
+    - type: docker
+      hints.enabled: true
+      templates:
+        - condition:
+            equals:
+              docker.container.image: nginx
+          config:
+            - type: docker
+              containers.ids:
+                - "${data.docker.container.id}"
+
+# processors:
+#   - decode_json_fields:
+#       fields: ["message"]
+#       process_array: false
+#       max_depth: 1
+#       target: "json"
+#       overwrite_keys: false
+
+http.enabled: true
+# http.port: 5067
+monitoring.enabled: false
+#============================== Xpack Monitoring ===============================
+# xpack.monitoring.enabled: true
+xpack.monitoring.elasticsearch.hosts: ${ES_LOGS_REMOTE_HOST}
+xpack.monitoring.elasticsearch.username: ${ES_LOGS_REMOTE_USER}
+xpack.monitoring.elasticsearch.password: ${ES_LOGS_REMOTE_PASSWORD}
+
+output.logstash:
+  enabled: true
+  ssl.enabled: false
+  hosts: ${ES_LOGS_REMOTE_HOST}
+  user: ${ES_LOGS_REMOTE_USER}
+  password: ${ES_LOGS_REMOTE_PASSWORD}
+
+#============================== Dashboards =====================================
+setup.dashboards:
+  enabled: true
+
+#============================== Kibana =========================================
+setup.kibana:
+  host: ${ES_LOGS_REMOTE_HOST}
+  username: ${ES_LOGS_REMOTE_USER}
+  password: ${ES_LOGS_REMOTE_PASSWORD}
